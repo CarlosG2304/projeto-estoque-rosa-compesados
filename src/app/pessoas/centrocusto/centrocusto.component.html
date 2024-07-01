@@ -1,0 +1,60 @@
+<div class="container">
+
+    <!-- Pesquisa -->
+    <div class="grid">
+      <form autocomplete="off" >
+        <div class="col-12">
+          <h1>Centros de Custo</h1>
+        </div>
+  
+        <div class="col-12 p-fluid">
+          <label>Nome</label>
+          <input pInputText [(ngModel)]="filtro.Descricao" type="text" name="nome" >
+        </div>
+  
+        <div class="col-12">
+          <button pButton type="submit" (click)="pesquisar()" label="Pesquisar"></button>
+        </div>
+      </form>
+    </div>
+  
+    <!-- Lista de pessoas -->
+    <div class="grid">
+      <div class="col-12">
+        <p-table [value]="centrocusto"   styleClass="p-datatable-gridlines"  [responsive]="true" [paginator]="true" [rows]="5" 
+          [totalRecords]="totalRegistros"  #tabela>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="body" let-classificacao>
+            <tr>
+              <td>
+                <span class="p-column-title">ID</span>
+                {{ classificacao.Id }}
+              </td>
+              <td>
+                <span class="p-column-title">Nome</span>
+                {{ classificacao.nome }}
+              </td>
+             
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5">
+                Nenhuma pessoa encontrada
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+       
+      </div>
+  
+
+    </div>
+  
+  </div>

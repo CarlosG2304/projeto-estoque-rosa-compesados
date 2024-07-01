@@ -1,0 +1,95 @@
+<div class="container">
+<!-- (ngSubmit)="pesquisar()" -->
+  <form autocomplete="off" >
+    <div class="grid">
+
+      <div class="col-12">
+        <h1>Movimentaçao</h1>
+      </div>
+
+      <div class="col-12 p-fluid">
+        <label>Descrição</label>
+        <input pInputText type="text" name="descricao" [(ngModel)]="filtro.descricao">
+      </div>
+
+      <div class="col-12">
+        <label style="display: block">data</label>
+
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoInicio"
+          [(ngModel)]="filtro.dataInicio"></p-calendar>
+
+        <label class="label">até</label>
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoFim"
+          [(ngModel)]="filtro.dataFim"></p-calendar>
+      </div>
+
+      <div class="col-6">
+        <button pButton (click)="pesquisar()" type="submit" label="Pesquisar"></button>
+      </div>
+      <div class="col-6">
+      <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
+    </div>
+    </div>
+  </form>
+
+  <div class="grid">
+    <div class="col-12">
+      <p-table [value]="movimentacao" [responsive]="true" [paginator]="true" [rows]="5" 
+        [totalRecords]="totalRegistros"  #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Descrição</th>
+            <th>Data</th>
+            <th>Tipo</th>
+            <th>Quantidade</th>
+            <th >Unidade</th>
+            <th class="col-valor-header"></th>
+          </tr>
+        </ng-template>
+        <ng-template  pTemplate="body" let-movimentacao>
+          <tr>
+            <td>
+              <span class="p-column-title">Descrição</span>
+              {{ movimentacao.nome }}
+            </td>
+
+            <td>
+              <span class="p-column-title">Data</span>
+              {{ movimentacao.data | date:'dd/MM/yy'}}
+            </td>
+            <td>
+              <span class="p-column-title">Tipo</span>
+              {{ movimentacao.tipo }}
+            </td>
+            <td>
+              <span class="p-column-title">Quantidade</span>
+              <span>
+                {{ movimentacao.Quantidade }}
+              </span>
+            </td>
+            <td >
+              <span class="p-column-title">Unidade</span>
+              <span>
+                {{ movimentacao.unidade| uppercase }}
+              </span>
+            </td>
+            <td class="col-acoes">
+              <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                [routerLink]="['/lancamento', movimentacao.Id]"></a>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              Nenhum lançamento encontrado
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <a pButton label="Novo Lançamento" routerLink="/lancamento/novo"></a>
+
+</div>

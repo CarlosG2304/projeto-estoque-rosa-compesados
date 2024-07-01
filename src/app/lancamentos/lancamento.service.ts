@@ -1,0 +1,155 @@
+import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Item, Movimentacao } from '../core/model';
+
+export class LancamentoFiltro {
+  descricao?: string = ''
+  dataInicio?: string = '2024-01-01'
+  dataFim?: string = '2025-01-01'
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LancamentoService {
+
+  movimentacaoUrl = 'http://localhost:3000/movimentacao';
+  movimentacaoUrlS = 'http://192.168.1.221:3000/entradas';
+  itensUrl = 'http://localhost:3000/itens';
+ estoqueURL ='http://localhost:3000/estoque'
+ params = new HttpParams();
+  constructor(private http: HttpClient,
+    private datePipe: DatePipe) { }
+
+getAll(filtro:any):Promise<any>{
+  this.params = this.params.set('filtro', filtro.descricao)
+  this.params = this.params.set('dataInicio', filtro.dataInicio)
+  this.params = this.params.set('dataFim', filtro.dataFim) 
+return this.http.get(this.movimentacaoUrl,{params:this.params}).toPromise()
+}
+
+getAllitens(filtro:any):Promise<any>{
+  this.params = this.params.set('filtro', filtro.Descricao)
+  return this.http.get(this.itensUrl, {params: this.params}).toPromise()
+  }
+
+  getEstoque(filtro:any): Promise<any>{
+    this.params = this.params.set('filtro', filtro.Descricao)
+    return this.http.get(this.estoqueURL, {params: this.params}).toPromise()
+  }
+  
+ 
+
+post(dados:any):Promise<any>{
+
+    return this.http.post(this.movimentacaoUrl, dados).toPromise()
+  }
+
+  postItem(dados:any):Promise<any>{
+
+    return this.http.post(this.itensUrl, dados).toPromise()
+  }
+  
+  postEstoque(dados:any):Promise<any>{
+     dados.quantidade = 0
+    return this.http.post(this.estoqueURL, dados).toPromise()
+  }
+
+  editarItem(id:any, item:Item){
+    return this.http.put(this.estoqueURL+ '/'+id, item).toPromise()
+  }
+
+  excluirItem(id:any){
+    return this.http.delete(this.movimentacaoUrl+ '/'+id).toPromise()
+  }
+
+  buscarPorCodigo(codigo: number): Promise<any> {
+  /*   const headers = new HttpHeaders()
+      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg=='); */
+
+    return this.http.get(`${this.movimentacaoUrl}/${codigo}`)
+      .toPromise()
+
+  }
+  /* pesquisar(filtro: LancamentoFiltro): Promise<any> {
+    const headers = new HttpHeaders()
+     /*  .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+
+    let params = new HttpParams()
+      .set('page', filtro.pagina)
+      .set('size', filtro.itensPorPagina);
+
+
+    if (filtro.descricao) {
+      params = params.set('descricao', filtro.descricao);
+    }
+
+    if (filtro.dataVencimentoInicio) {
+      params = params.set('dataVencimentoDe', this.datePipe.transform(filtro.dataVencimentoInicio, 'yyyy-MM-dd')!);
+    }
+
+    if (filtro.dataVencimentoFim) {
+      params = params.set('dataVencimentoAte', this.datePipe.transform(filtro.dataVencimentoFim, 'yyyy-MM-dd')!);
+    }
+
+    return this.http.get(`${this.lancamentosUrl}?resumo`, { headers, params })
+      .toPromise()
+      .then((response: any) => {
+        const lancamentos = response['content'];
+
+        const resultado = {
+          lancamentos,
+          total: response['totalElements']
+        };
+
+        return resultado;
+      });
+  }
+
+  excluir(codigo: number): Promise<void> {
+    const headers = new HttpHeaders()
+      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+
+    return this.http.delete<void>(`${this.lancamentosUrl}/${codigo}`, { headers })
+      .toPromise();
+  }
+
+  adicionar(lancamento: Lancamento): Promise<Lancamento> {
+    const headers = new HttpHeaders()
+      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==')
+      .append('Content-Type', 'application/json');
+
+    return this.http.post<Lancamento>(this.lancamentosUrl, lancamento, { headers })
+      .toPromise();
+  }
+
+  atualizar(lancamento: Lancamento): Promise<Lancamento> {
+    const headers = new HttpHeaders()
+      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==')
+      .append('Content-Type', 'application/json');
+
+    return this.http.put<Lancamento>(`${this.lancamentosUrl}/${lancamento.codigo}`, lancamento, { headers })
+      .toPromise()
+      .then((response: any) => {
+        this.converterStringsParaDatas([response]);
+
+        return response;
+      });
+  }
+
+
+
+  private converterStringsParaDatas(lancamentos: Lancamento[]) {
+    for (const lancamento of lancamentos) {
+      let offset = new Date().getTimezoneOffset() * 60000;
+
+      lancamento.dataVencimento = new Date(new Date(lancamento.dataVencimento!).getTime() + offset);
+
+      if (lancamento.dataPagamento) {
+        lancamento.dataPagamento = new Date(new Date(lancamento.dataPagamento).getTime() + offset);
+      }
+    }
+  } */
+}

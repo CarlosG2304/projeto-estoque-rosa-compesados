@@ -1,0 +1,81 @@
+<div class="container">
+
+  <!-- Pesquisa -->
+  <div class="grid">
+    <form autocomplete="off" (ngSubmit)="pesquisar()">
+      <div class="col-12">
+        <h1>Estoque</h1>
+      </div>
+
+      <div class="col-12 p-fluid">
+        <label>Nome</label>
+        <input pInputText type="text" name="nome" [(ngModel)]="filtro.Descricao">
+      </div>
+
+      <div class="col-12">
+        <button pButton type="submit" label="Pesquisar"></button>
+      </div>
+      <div class="col-12">
+        <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
+      </div>
+    </form>
+  </div>
+<!--   -->
+  <!-- Lista de pessoas -->
+  <div class="grid">
+    <div class="col-12">
+      <p-table [value]="itens" [responsive]="true"  [first]="pagina" [paginator]="true" [rows]="5" 
+        [showCurrentPageReport]="true" (onPage)="aoMudarPagina($event)" #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Item</th>
+            <th>Quantidade</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-itens>
+          <tr>
+            <td>
+              <span class="p-column-title">ID</span>
+              {{ itens.Id }}
+            </td>
+            <td>
+              <span class="p-column-title">Item</span>
+              {{ itens.nome }}
+            </td>
+            <td>
+              <span class="p-column-title">Quantidade</span>
+              {{ itens.Quantidade }}
+            </td>
+         <!--    <td>
+              <span class="p-column-title">Status</span>
+              <a href="javascript:;" [pTooltip]="pessoa.ativo ? 'Desativar' : 'Ativar'" tooltipPosition="top"
+                (click)="alternarStatus(pessoa)">
+                {{ pessoa.ativo ? 'Ativo' : 'Inativo' }}
+              </a>
+            </td> -->
+           <!--  <td class="col-acoes">
+              <span class="p-column-title"></span>
+              <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                [routerLink]="['/pessoas', pessoa.codigo]"></a>
+              <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
+                (click)="confirmarExclusao(pessoa)"></button>
+            </td>
+          --> 
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">
+              Nenhum Item encontrada
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,104 @@
+<!-- <nav class="navbar">
+
+  <div class="container">
+    <div class="grid">
+      <div class="col-12">
+        <a href="javascript:;" class="navbar-toggle" (click)="exibindoMenu = !exibindoMenu"><i class="pi pi-bars"></i></a>
+      </div>
+    </div>
+  </div>
+  <ul >
+    <li class="navbar-usuario">Alex Silva</li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/cadastros">Cadastros</a></li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/movimentacao">Movimentacao</a></li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/estoque">Estoque</a></li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/itens">Itens</a></li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/centrocusto">Centro de Custo</a></li>
+    <li class="navbar-menuitem" routerLinkActive="ativo"><a routerLink="/classificacao">Classificação</a></li>
+  </ul>
+
+
+
+
+</nav> -->
+<nav class="navbar">
+<div class="card flex justify-content-center">
+  <p-sidebar #sidebarRef [(visible)]="exibindoMenu" position="right">
+      <ng-template pTemplate="headless">
+          <div class="flex flex-column h-full">
+              <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+                  <span class="inline-flex align-items-center gap-2">
+                      <svg width="200" height="80" viewBox="0 0 33 35" fill="none" xmlns="Logo Rosa.jpg" >
+                
+                      </svg>
+    
+                  </span>
+              </div>
+              <div class="overflow-y-auto">
+                  <ul class="list-none p-3 m-0">
+                      <li>
+                
+                          <ul class="list-none p-0 m-0 overflow-hidden">
+                              <li class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a pRipple routerLink="/cadastros" class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-cog mr-2"></i>
+                                      <span class="font-medium" >Cadastros</span>
+                                  </a>
+                              </li>
+                              <li class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a routerLink="/movimentacao" pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-sync mr-2"></i>
+                                      <span class="font-medium">Movimentação</span>
+                                  </a>
+                              </li>
+                              <li>
+                              </li>
+                              <li  class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a pRipple routerLink="/estoque" class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-book mr-2"></i>
+                                      <span class="font-medium">Estoque</span>
+                                  </a>
+                              </li>
+                              
+                          </ul>
+                      </li>
+                  </ul>
+                  <ul class="list-none p-3 m-0">
+                      <li>
+                      
+                          <ul class="list-none p-0 m-0 overflow-hidden">
+                              <li class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a routerLink="/itens" pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-folder mr-2"></i>
+                                      <span class="font-medium">Itens</span>
+                                  </a>
+                              </li>
+                              <li class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a routerLink="/centrocusto" pRipple class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-chart-bar mr-2"></i>
+                                      <span class="font-medium">Centro de Custo</span>
+                                  </a>
+                              </li>
+                              <li class="navbar-menuitem" routerLinkActive="ativo">
+                                  <a pRipple  routerLink="/classificacao" class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                      <i class="pi pi-list mr-2"></i>
+                                      <span class="font-medium">Classificação</span>
+                                  </a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+              <div class="mt-auto">
+                  <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+                  <a pRipple class="m-3 flex align-items-center cursor-pointer p-3 gap-2 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" ></p-avatar>
+                      <span class="font-bold">Alex Silva</span>
+                  </a>
+              </div>
+          </div>
+      </ng-template>
+  </p-sidebar>
+  <p-button (click)="exibindoMenu = true" icon="pi pi-bars"></p-button>
+  </div>
+</nav>

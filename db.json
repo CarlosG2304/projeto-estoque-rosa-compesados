@@ -1,0 +1,344 @@
+{
+  "movimentacao": [
+    {
+      "id": "2aa6",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 1000,
+      "Descricao": "Cola",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "d51f",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 1000,
+      "Descricao": "Parafuso",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "1f69",
+      "Quantidade": 1000,
+      "Descricao": "Parafuso",
+      "tipo": "SAIDA",
+      "centrocusto": "Apoio",
+      "classificacao": "JVS"
+    },
+    {
+      "id": "b397",
+      "data": "2024-05-15T03:00:00.000Z",
+      "Quantidade": 1000,
+      "Descricao": "Parafuso",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "9758",
+      "data": "2024-05-15T03:00:00.000Z",
+      "Quantidade": 1000,
+      "Descricao": "Parafuso",
+      "tipo": "SAIDA",
+      "centrocusto": "Apoio",
+      "classificacao": "JVS"
+    },
+    {
+      "id": "6c8d",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 200,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "c591",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "538a",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "bf67",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "5eae",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "ca17",
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Xadrez",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "2c41",
+      "Descricao": "Trapo",
+      "quantidade": 0
+    },
+    {
+      "id": "509f",
+      "Descricao": "Cabo de Aço",
+      "quantidade": 0
+    },
+    {
+      "id": "580a",
+      "Descricao": "Cabo de Aço 2",
+      "quantidade": 0
+    },
+    {
+      "id": "902f",
+      "Descricao": "cabo de aço 3",
+      "quantidade": 0
+    },
+    {
+      "id": "4f35",
+      "data": "2024-06-19T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Cola",
+      "tipo": "SAIDA",
+      "centrocusto": "Apoio",
+      "classificacao": "JVS",
+      "unidade": "unidade"
+    },
+    {
+      "id": "b14c",
+      "data": "2024-06-11T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Cola",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "00a4",
+      "data": "2024-06-12T03:00:00.000Z",
+      "Quantidade": 100,
+      "Descricao": "Cola",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "dbad",
+      "data": "2024-06-11T03:00:00.000Z",
+      "Quantidade": 200,
+      "Descricao": "Cola",
+      "tipo": "SAIDA",
+      "centrocusto": "Caçamba",
+      "classificacao": "Caçamba",
+      "unidade": "Caixa"
+    },
+    {
+      "id": "7a90",
+      "data": "2024-06-18T03:00:00.000Z",
+      "Quantidade": 1000,
+      "Descricao": "Fita",
+      "tipo": "ENTRADA",
+      "unidade": "unidade"
+    },
+    {
+      "id": "2cd4",
+      "item": {
+        "Descricao": "Cola",
+        "id": "2"
+      },
+      "centrocusto": {},
+      "data": "2024-06-12T03:00:00.000Z",
+      "Quantidade": 1000,
+      "tipo": "ENTRADA",
+      "unidade": "unidade"
+    },
+    {
+      "id": "5577",
+      "item": {
+        "Descricao": "Xadrez",
+        "id": "1"
+      },
+      "centrocusto": {},
+      "data": "2024-06-04T03:00:00.000Z",
+      "Quantidade": 1000,
+      "tipo": "ENTRADA",
+      "unidade": "caixa"
+    },
+    {
+      "id": "204e",
+      "item": {
+        "Descricao": "Cola",
+        "id": "2"
+      },
+      "centrocusto": {
+        "id": "1",
+        "nome": "Apoio"
+      },
+      "classificacao": {
+        "id": "1",
+        "nome": "JVS"
+      },
+      "data": "2024-06-05T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "SAIDA",
+      "unidade": "Unidade"
+    },
+    {
+      "id": "b56e",
+      "item": {
+        "id": "12ff",
+        "Descricao": "Teste2"
+      },
+      "centrocusto": {},
+      "data": "2024-06-11T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "7c02",
+      "item": {
+        "id": "12ff",
+        "Descricao": "Teste2"
+      },
+      "centrocusto": {},
+      "data": "2024-06-11T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "38de",
+      "item": {
+        "id": "12ff",
+        "Descricao": "Teste2"
+      },
+      "centrocusto": {},
+      "data": "2024-06-11T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "4cb0",
+      "item": {
+        "id": "12ff",
+        "Descricao": "Teste2",
+        "quantidade": 0
+      },
+      "centrocusto": {},
+      "data": "2024-06-12T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "6496",
+      "item": {},
+      "centrocusto": {},
+      "data": "2024-06-12T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "738a",
+      "item": {
+        "id": "6496"
+      },
+      "centrocusto": {},
+      "data": "2024-06-12T03:00:00.000Z",
+      "Quantidade": 100,
+      "tipo": "ENTRADA"
+    }
+  ],
+  "centrocusto": [
+    {
+      "id": "1",
+      "nome": "Apoio"
+    },
+    {
+      "id": "2",
+      "nome": "Caçamba"
+    },
+    {
+      "id": "3",
+      "nome": "Caminhão"
+    },
+    {
+      "id": "7b00",
+      "nome": "Braço Grande"
+    },
+    {
+      "id": "2bda",
+      "nome": "veiculos leves"
+    }
+  ],
+  "classificacao": [
+    {
+      "id": "1",
+      "nome": "JVS"
+    },
+    {
+      "id": "2",
+      "nome": "Caçamba"
+    },
+    {
+      "id": "3",
+      "nome": "PPX"
+    },
+    {
+      "id": "322d",
+      "nome": "F-1000"
+    },
+    {
+      "id": "c947",
+      "nome": "Fazendas"
+    },
+    {
+      "id": "9cf6",
+      "nome": "Caminhao 0160"
+    }
+  ],
+  "itens": [
+    {
+      "Descricao": "Xadrez",
+      "id": "1"
+    },
+    {
+      "Descricao": "Cola",
+      "id": "2"
+    },
+    {
+      "id": "3",
+      "Descricao": "Xadrez"
+    },
+    {
+      "id": "37db",
+      "Descricao": "Disco de Corte"
+    },
+    {
+      "id": "144a",
+      "Descricao": "Disco de Desgaste"
+    },
+    {
+      "id": "44a1",
+      "Descricao": "Fita"
+    },
+    {
+      "id": "14e9",
+      "Descricao": "Teste"
+    },
+    {
+      "id": "12ff",
+      "Descricao": "Teste2"
+    }
+  ],
+  "estoque": [
+    {
+      "id": "12ff",
+      "Descricao": "Caneta",
+      "quantidade": 100
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
