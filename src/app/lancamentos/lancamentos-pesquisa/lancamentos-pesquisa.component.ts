@@ -27,7 +27,7 @@ export class LancamentosPesquisaComponent implements OnInit {
 
   movimentacao: Movimentacao[] = [];
   @ViewChild('tabela') grid!: Table;
-
+  pagina = 0
   constructor(
     private lancamentoService: LancamentoService,
     private errorHandler: ErrorHandlerService,
@@ -51,8 +51,8 @@ export class LancamentosPesquisaComponent implements OnInit {
          
         this.messageService.add({ severity: 'success', detail: 'Lançamento excluído com sucesso!' })
   }
-  pesquisar(pagina: number = 0): void {
-
+  pesquisar(): void {
+    this.pagina = 0
     this.filtro.dataInicio =   this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
     this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'dd/MM/yyyy')?.toString()
     this.lancamentoService.getAll(this.filtro)
@@ -67,7 +67,11 @@ export class LancamentosPesquisaComponent implements OnInit {
   }
 
   relatorio(){
-    window.open("http://localhost:3000/movimentacao/relatorio")
+    window.open("http://localhost:3001/movimentacao/relatorio")
+  }
+
+  aoMudarPagina(event: LazyLoadEvent) {
+    this.pagina = event.first!;
   }
 /* 
 

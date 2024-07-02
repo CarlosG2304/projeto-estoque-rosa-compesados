@@ -20,12 +20,13 @@
       </div>
     </form>
   </div>
-<!--   -->
+<!-- (onLazyLoad)="aoMudarPagina($event)"  -->
   <!-- Lista de pessoas -->
   <div class="grid">
     <div class="col-12">
-      <p-table [value]="itens" [responsive]="true"  [first]="pagina" [paginator]="true" [rows]="5" 
-        [showCurrentPageReport]="true" (onPage)="aoMudarPagina($event)" #tabela>
+      <p-table [value]="itens" [responsive]="true" [paginator]="true" [rows]="5" 
+      [showCurrentPageReport]="true" [(first)]="pagina" (onPage)="aoMudarPagina($event)"
+        [totalRecords]="totalRegistros" #tabela>
         <ng-template pTemplate="header">
           <tr>
             <th>ID</th>
@@ -69,7 +70,7 @@
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="5">
-              Nenhum Item encontrada
+              Nenhuma Item encontrado
             </td>
           </tr>
         </ng-template>

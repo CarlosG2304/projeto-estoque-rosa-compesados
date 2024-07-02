@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService,ConfirmationService } from 'primeng/api';
+import { MessageService,ConfirmationService, LazyLoadEvent } from 'primeng/api';
 import { ErrorHandlerService } from '../../core/error-handler.service';
 import { Item,centrocusto } from '../../core/model';
 import { PessoaService, PessoaFiltro } from '../pessoa.service';
@@ -18,6 +18,7 @@ export class ClassificacaoComponent implements OnInit {
 
   totalRegistros = 0;
   classificacao:any[] = [];
+  pagina = 0
   filtro:any = {
     "Descricao":''
   }
@@ -37,8 +38,13 @@ export class ClassificacaoComponent implements OnInit {
   }
 
   pesquisar(): void {
+    this.pagina = 0
     this.categoriaService.getclassificacao(this.filtro).then(dados =>  this.classificacao = dados ).then(() => this.totalRegistros = this.classificacao.length)
 
+  }
+
+  aoMudarPagina(event: LazyLoadEvent) {
+    this.pagina = event.first!;
   }
 
 

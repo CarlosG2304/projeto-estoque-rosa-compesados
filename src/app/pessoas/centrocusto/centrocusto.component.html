@@ -22,7 +22,7 @@
     <div class="grid">
       <div class="col-12">
         <p-table [value]="centrocusto"   styleClass="p-datatable-gridlines"  [responsive]="true" [paginator]="true" [rows]="5" 
-          [totalRecords]="totalRegistros"  #tabela>
+          [totalRecords]="totalRegistros" [(first)]="pagina" (onPage)="aoMudarPagina($event)"  #tabela>
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -46,7 +46,7 @@
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="5">
-                Nenhuma pessoa encontrada
+                Nenhuma centro de custo encontrado
               </td>
             </tr>
           </ng-template>

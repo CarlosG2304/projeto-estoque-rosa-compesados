@@ -15,10 +15,10 @@ export class LancamentoFiltro {
 })
 export class LancamentoService {
 
-  movimentacaoUrl = 'http://localhost:3000/movimentacao';
-  movimentacaoUrlS = 'http://192.168.1.221:3000/entradas';
-  itensUrl = 'http://localhost:3000/itens';
- estoqueURL ='http://localhost:3000/estoque'
+  movimentacaoUrl = 'http://localhost:3001/movimentacao';
+  movimentacaoUrlS = 'http://localhost:3001/entradas';
+  itensUrl = 'http://localhost:3001/itens';
+ estoqueURL ='http://localhost:3001/estoque'
  params = new HttpParams();
   constructor(private http: HttpClient,
     private datePipe: DatePipe) { }

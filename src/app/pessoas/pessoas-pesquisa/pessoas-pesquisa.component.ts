@@ -15,10 +15,10 @@ import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
 })
 export class PessoasPesquisaComponent implements OnInit {
   totalRegistros = 0;
+  pagina = 0
   filtro = {
     "Descricao":''
   }
-  pagina:number = 0;
   itens:Estoque[] = [];
   @ViewChild('tabela') grid!: any;
 
@@ -39,26 +39,29 @@ export class PessoasPesquisaComponent implements OnInit {
       });
   }
 
-  pesquisar(pagina: number = 0): void {
-    this.pagina = 0
+  pesquisar(): void {
+    this.pagina = 0 
+
     this.lancamento.getEstoque(this.filtro)
     .then((dados: any) => {
       this.itens = dados;
-      this.totalRegistros = 0
-      this.totalRegistros = dados.total;
-      this.pagina = 0
+
+      this.totalRegistros = dados.length;
+
+    
     });
     
   }
   relatorio(){
-    window.open("http://localhost:3000/estoque/relatorio")
+    window.open("http://localhost:3001/estoque/relatorio")
   } 
   
   aoMudarPagina(event: LazyLoadEvent) {
     this.pagina = event.first!;
+
   }
 
-/* 
+/*  
 
   confirmarExclusao(pessoa: any): void {
     this.confirmationService.confirm({

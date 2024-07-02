@@ -63,8 +63,7 @@ export class LancamentoCadastroComponent implements OnInit {
       { label: 'Kilo'},
       { label: 'Metro'}]
       
-      console.log(this.view)
-    
+   
       this.lancamentoService.getAllitens(this.filtro).then(dados => {
         this.itens = dados
      })
@@ -83,7 +82,7 @@ export class LancamentoCadastroComponent implements OnInit {
     if (codigoLancamento && codigoLancamento !== 'novo') {
        this.carregarLancamento(codigoLancamento) 
        this.view = true
-       console.log(this.view)
+  
     }}
   salvaLancamento(form:NgForm){
     this.movimentacao.item = this.item
@@ -92,19 +91,21 @@ export class LancamentoCadastroComponent implements OnInit {
      this.movimentacao.classificacao = this.classificacaoS
      this.movimentacao.unidade = this.unidadeS.label
      if(this.value == "ENTRADA" || this.value == 'SAIDA'){
-    console.log(this.value)
-  
+
           this.lancamentoService.post(this.movimentacao).then(dados => {
      this.item = dados
      this.messageService.add({ severity: 'success', detail: 'Movimentação salva com sucesso!' });
     }) .catch(erro => {
       this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-      console.log(erro)
-    });
+    
+    }); 
     
       form.reset()
     if(this.value === 'ENTRADA' && this.movimentacao.Quantidade !== undefined && this.estoqueS.quantidade !== undefined ){
        this.estoqueS.quantidade = this.estoqueS.quantidade + this.movimentacao.Quantidade
+       this.movimentacao.centrocusto = {}
+       this.movimentacao.classificacao = {}
+
        this.lancamentoService.editarItem(this.estoqueS.Id, this.estoqueS).then(dados => console.log(dados))   
     }else if(this.value === 'SAIDA'  && this.movimentacao.Quantidade !== undefined && this.estoqueS.quantidade !== undefined){
       this.estoqueS.quantidade = this.estoqueS.quantidade - this.movimentacao.Quantidade

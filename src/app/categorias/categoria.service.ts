@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class CategoriaService {
 
-   centrocustoURl = 'http://localhost:3000/centrocusto'
-   classicacaoURl = 'http://localhost:3000/classificacao'
+   centrocustoURl = 'http://localhost:3001/centrocusto'
+   classicacaoURl = 'http://localhost:3001/classificacao'
   params = new HttpParams();
   constructor(private http: HttpClient) { }
 

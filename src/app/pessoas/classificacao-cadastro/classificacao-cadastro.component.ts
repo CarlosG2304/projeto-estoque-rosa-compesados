@@ -35,11 +35,11 @@ export class ClassificacaoCadastroComponent implements OnInit {
   }
 salvarItem(form:NgForm){
    this.lancamentoService.postItem(this.item).then(dados => {
-    console.log(dados)
+
     this.messageService.add({ severity: 'success', detail: 'Item salvo com sucesso!' });
   }) .catch(erro => {
     this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-    console.log(erro)
+
   });
 
 
@@ -48,22 +48,22 @@ salvarItem(form:NgForm){
 }
 salvarClassificacao(form:NgForm){
    this.pessoaService.post(this.classificacao).then(dados => {
-    console.log(dados)
+
     this.messageService.add({ severity: 'success', detail: 'Classificação salva com sucesso!' });
   }) .catch(erro => {
     this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-    console.log(erro)
+
   });
   
    form.reset()
 }
 salvarCentroCusto(form:NgForm){
   this.categoriaService.postCentroCusto(this.centrocusto).then(dados => {
-    console.log(dados)
+
     this.messageService.add({ severity: 'success', detail: 'Centro de custo salvo com sucesso!' });
   }) .catch(erro => {
     this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-    console.log(erro)
+  
   });
   
    form.reset()

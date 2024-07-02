@@ -4,7 +4,7 @@ const express = require('express');
 const app = express()
 var cors = require('cors')
 const bodyParser = require('body-parser')
-const port = 3000
+const port = 3001
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 var PdfPrinter = require('pdfmake');
@@ -40,8 +40,7 @@ app.get('/movimentacao/relatorio',async(req,res) => {
   .leftJoin('classificacao as c',  'm.codigoClassificacao', 'c.Id')
   .leftJoin('CentroCusto as cc', 'm.codigoCentroCusto', 'cc.Id')
   .select('m.Id', 'Quantidade', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome')
-
- 
+  .orderBy('data')
   var fonts = {
      Courier: {
     normal: 'Courier',
@@ -88,7 +87,7 @@ app.get('/movimentacao/relatorio',async(req,res) => {
         text:'Relatorio da movimentação de estoque\n\n', style:'header',
       },
        { table: {
-        widths: [100, 'auto', 'auto', 75,'auto','auto',85],
+        widths: [82, 55, 50, 72,52,90,88],
     
         body: [
           [{text: "Descrição", style: 'columnsTitle'}, {text: "Tipo" , style: 'columnsTitle'},{text:"Data", style: 'columnsTitle'}, {text:"Quantidade", style: 'columnsTitle'}, {text: "Unidade", style: 'columnsTitle'},{text: "Centro de Custo", style: 'columnsTitle'}, {text: "Classificação", style: 'columnsTitle'}],
@@ -97,18 +96,6 @@ app.get('/movimentacao/relatorio',async(req,res) => {
       ]
        },
        alignment: "center",
-       layout: {hLineWidth: function (i, node) {
-        return (i === 0 || i === node.table.body.length) ? 2 : 1;
-      },
-      vLineWidth: function (i, node) {
-        return (i === 0 || i === node.table.widths.length) ? 2 : 0;
-      },
-      hLineColor: function (i, node) {
-        return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
-      },
-      vLineColor: function (i, node) {
-        return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
-      },}
     }
       ],
       defaultStyle: {
@@ -185,7 +172,7 @@ app.get('/movimentacao/:id', (req,res) => {
 })
 
 app.post('/movimentacao', (req,res) => {
-  
+  if(req.body.centrocusto){
   movimentacacao = {
     "Quantidade": req.body.Quantidade,
     "tipo":  req.body.tipo,
@@ -194,25 +181,36 @@ app.post('/movimentacao', (req,res) => {
     "codigoItem": req.body.item.Id,
     "codigoCentroCusto":  req.body.centrocusto.Id,
     "codigoClassificacao": req.body.classificacao.Id}
+  }else{
+    movimentacacao = {
+      "Quantidade": req.body.Quantidade,
+      "tipo":  req.body.tipo,
+      "unidade": req.body.unidade,
+      "data": req.body.data,
+      "codigoItem": req.body.item.Id}
+  }
 
-console.log(movimentacacao)
+
+
 
   const insert = knex('Movimentação')
   .insert(movimentacacao)
 
   insert.then(data => {
        res.send(data)
-  }) 
+  })
+  .catch(error => res.status(500).send(error))
    
        if(req.body.tipo == 'ENTRADA'){
-   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "nome" = ?', [req.body.Quantidade,req.body.item.nome])
-     update.then(data => console.log('Entrada ok '+ data))
+   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
+        update.then(data => data)
+        .catch(error => console.log(error))
   }else if(req.body.tipo == 'SAIDA' ){
         const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
-       update.then(data => console.log('Saida ok '+data))
+       update.then(data => data)
+       .catch(error => console.log(error))
       }  
-      
-   console.log(req.body)
+ 
 })
 
 
@@ -276,16 +274,17 @@ app.get('/estoque/relatorio',async(req,res) => {
       content: [{
         columns: [{
         text:'Relatorio do estoque', style:'header'} ,{
-        image: 'E:\\Workspace\\projeto-estoque\\src\\app\\core\\navbar\\LogoRosa.jpg',
+        image: '.\\src\\app\\core\\navbar\\LogoRosa.jpg',
         style:'logo',
         width: 180,
         margin: [0,0,5,8],
-      },{text: 'Data: '+ today.toLocaleDateString()+'' , style:'data'}],
+      }	,{text: 'Data: '+ today.toLocaleDateString()+'' , style:'data'}],
     },{ table: {
         body: [
           [{text: "Id", style: "columnsTitle"},{text: "Descrição", style: "columnsTitle"}, {text: "Quantidade", style: "columnsTitle"}],
           ...body]
-       },alignment: "center",}
+       }
+       ,alignment: "center",}
       ],
       defaultStyle: {
         font: 'Helvetica',
@@ -348,17 +347,20 @@ app.get('/itens', (req,res) => {
 
 })
 app.post('/itens', (req,res) => {
-  
+ novoEstoque = {
+    "nome": req.body.nome,
+    "Quantidade": 0}
   const insertItens = knex('Itens')
   .insert(req.body)
   const insertEstoque = knex('Estoque')
-  .insert(req.body)
+  .insert(novoEstoque)
+ 
    
    insertItens.then(data => {
        res.send(data)
   })
   insertEstoque.then(data => {
-    console.log(data)
+  
   })
 
 })

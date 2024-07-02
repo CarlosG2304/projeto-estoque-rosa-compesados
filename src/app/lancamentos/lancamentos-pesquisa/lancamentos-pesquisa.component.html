@@ -34,8 +34,8 @@
 
   <div class="grid">
     <div class="col-12">
-      <p-table [value]="movimentacao" [responsive]="true" [paginator]="true" [rows]="5" 
-        [totalRecords]="totalRegistros"  #tabela>
+      <p-table [value]="movimentacao" [responsive]="true" [paginator]="true"  [showCurrentPageReport]="true"  [rows]="4" [rowsPerPageOptions]="[4,8,12]"
+        [totalRecords]="totalRegistros" [(first)]="pagina" (onPage)="aoMudarPagina($event)" #tabela>
         <ng-template pTemplate="header">
           <tr>
             <th>Descrição</th>
@@ -74,7 +74,7 @@
               </span>
             </td>
             <td class="col-acoes">
-              <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+              <a pButton icon="pi pi-book" pTooltip="Visualizar" tooltipPosition="top"
                 [routerLink]="['/lancamento', movimentacao.Id]"></a>
             </td>
           </tr>
