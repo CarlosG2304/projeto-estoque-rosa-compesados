@@ -5,6 +5,7 @@ import localePt from '@angular/common/locales/pt';
 import { NgModule } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import {InputSwitchModule} from 'primeng/inputswitch';
 
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -17,6 +18,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { ErrorHandlerService } from './error-handler.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PaginaNaoEncontradaComponent } from './pagina-nao-encontrada.component';
+import { FormsModule } from '@angular/forms';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -34,7 +36,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     RouterModule,
     SidebarModule,
     ToastModule,
+    InputSwitchModule,
     ConfirmDialogModule,
+    FormsModule,
     AvatarModule,
     TranslateModule.forRoot({
       loader: {
@@ -53,7 +57,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   providers: [
     DatePipe,
     ErrorHandlerService,
-
     MessageService,
     ConfirmationService,
     Title,

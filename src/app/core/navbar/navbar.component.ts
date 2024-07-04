@@ -9,4 +9,6 @@ export class NavbarComponent {
 
   exibindoMenu: boolean = false;
 
+  checked: boolean = false
+
 }

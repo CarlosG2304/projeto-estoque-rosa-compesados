@@ -16,7 +16,15 @@ import { Movimentacao } from 'src/app/core/model';
 @Component({
   selector: 'app-lancamentos-pesquisa',
   templateUrl: './lancamentos-pesquisa.component.html',
-  styleUrls: ['./lancamentos-pesquisa.component.css']
+  styleUrls: ['./lancamentos-pesquisa.component.css'],
+  styles: [`
+ 
+
+    :host ::ng-deep .row-accessories {
+        background-color: rgba(100,100,100,.15) !important;
+    }
+`
+]
 })
 export class LancamentosPesquisaComponent implements OnInit {
 

@@ -1,9 +1,9 @@
 <div class="container">
 <!-- (ngSubmit)="pesquisar()" -->
   <form autocomplete="off" >
-    <div class="grid">
+    <div class="grid flex justify-content-center flex-wrap">
 
-      <div class="col-12">
+      <div class="col-3">
         <h1>Movimentaçao</h1>
       </div>
 
@@ -13,7 +13,7 @@
       </div>
 
       <div class="col-12">
-        <label style="display: block">data</label>
+        <label style="display: block">Data</label>
 
         <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoInicio"
           [(ngModel)]="filtro.dataInicio"></p-calendar>
@@ -23,17 +23,20 @@
           [(ngModel)]="filtro.dataFim"></p-calendar>
       </div>
 
-      <div class="col-6">
-        <button pButton (click)="pesquisar()" type="submit" label="Pesquisar"></button>
+      <div class="col-4">
+        <button pButton class="p-button-secondary" (click)="pesquisar()" type="submit" label="Pesquisar"></button>
       </div>
       <div class="col-6">
       <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
     </div>
+    <div class="col-2 p-fluid">
+  <a pButton label="Novo Lançamento" routerLink="/lancamento/novo"></a>
+</div>
     </div>
   </form>
 
-  <div class="grid">
-    <div class="col-12">
+  <div class="grid surface-50 row-accessories">
+    <div class="col-12 surface-50 row-accessoriess">
       <p-table [value]="movimentacao" [responsive]="true" [paginator]="true"  [showCurrentPageReport]="true"  [rows]="4" [rowsPerPageOptions]="[4,8,12]"
         [totalRecords]="totalRegistros" [(first)]="pagina" (onPage)="aoMudarPagina($event)" #tabela>
         <ng-template pTemplate="header">
@@ -43,13 +46,13 @@
             <th>Tipo</th>
             <th>Quantidade</th>
             <th >Unidade</th>
-            <th class="col-valor-header"></th>
+            <th class="col-valor-header surface-50"></th>
           </tr>
         </ng-template>
         <ng-template  pTemplate="body" let-movimentacao>
           <tr>
             <td>
-              <span class="p-column-title">Descrição</span>
+              <span class="p-column-title surface-50 .row-accessories">Descrição</span>
               {{ movimentacao.nome }}
             </td>
 
@@ -73,7 +76,7 @@
                 {{ movimentacao.unidade| uppercase }}
               </span>
             </td>
-            <td class="col-acoes">
+            <td class="col-acoes ">
               <a pButton icon="pi pi-book" pTooltip="Visualizar" tooltipPosition="top"
                 [routerLink]="['/lancamento', movimentacao.Id]"></a>
             </td>
@@ -89,7 +92,4 @@
       </p-table>
     </div>
   </div>
-
-  <a pButton label="Novo Lançamento" routerLink="/lancamento/novo"></a>
-
 </div>

@@ -1,22 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { PrimeNGConfig } from 'primeng/api';
+import { AppService } from './app.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'algamoney-ui';
 
-  constructor(
-    private config: PrimeNGConfig,
-    private translateService: TranslateService
-  ) { }
+  constructor(private appService: AppService) { }
+  
 
-  ngOnInit() {
-    this.translateService.setDefaultLang('pt');
-    this.translateService.get('primeng')
-      .subscribe(res => this.config.setTranslation(res));
+  selectedTheme:string = 'arya-green'
+
+  ngOnInit(): void {
+        
+    this.appService.switchTheme(this.selectedTheme);
+  }
+  checked = true
+
+  changeTheme(theme: string) {
+     
+    this.appService.switchTheme(theme);
   }
 }
