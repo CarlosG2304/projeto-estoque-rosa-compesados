@@ -31,7 +31,7 @@ export class PessoasPesquisaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.title.setTitle('Pesquisa de pessoas');
+    this.title.setTitle('Pesquisa no estoque');
     this.lancamento.getEstoque(this.filtro)
       .then((dados: any) => {
         this.itens = dados;

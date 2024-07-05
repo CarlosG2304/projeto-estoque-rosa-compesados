@@ -13,7 +13,6 @@ import { PessoasModule } from './pessoas/pessoas.module';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppRoutingModule } from './app-routing.module';
 
-
 @NgModule({
   declarations: [
     AppComponent

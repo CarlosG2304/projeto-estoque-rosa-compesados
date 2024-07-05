@@ -32,7 +32,7 @@ export class ClassificacaoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.title.setTitle('Pesquisa de pessoas');
+    this.title.setTitle('Classificações');
     this.categoriaService.getclassificacao(this.filtro).then(dados =>  this.classificacao = dados ).then(() => this.totalRegistros = this.classificacao.length)
 
   }

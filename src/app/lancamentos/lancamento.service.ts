@@ -46,6 +46,10 @@ post(dados:any):Promise<any>{
 
     return this.http.post(this.movimentacaoUrl, dados).toPromise()
   }
+  put(dados:any):Promise<any>{
+
+    return this.http.put(this.movimentacaoUrl, dados).toPromise()
+  }
 
   postItem(dados:any):Promise<any>{
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { LazyLoadEvent } from 'primeng/api';
 import { Item } from 'src/app/core/model';
 import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
@@ -15,9 +16,10 @@ pagina = 0
 filtro:any = {
   "Descricao":''
 };
-  constructor(private lacamentoService:LancamentoService) { }
+  constructor(private lacamentoService:LancamentoService, private title: Title) { }
 
   ngOnInit(): void {
+    this.title.setTitle('Itens');
    this.lacamentoService.getAllitens(this.filtro).then(dados => {
       this.itens = dados
    }

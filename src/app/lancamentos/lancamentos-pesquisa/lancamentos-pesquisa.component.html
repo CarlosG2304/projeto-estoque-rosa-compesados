@@ -1,19 +1,19 @@
 <div class="container">
 <!-- (ngSubmit)="pesquisar()" -->
   <form autocomplete="off" >
-    <div class="grid flex justify-content-center flex-wrap">
+    <div class="grid">
 
-      <div class="col-3">
+      <div class="col-12 ">
         <h1>Movimentaçao</h1>
       </div>
 
-      <div class="col-12 p-fluid">
+      <div class="col-5 p-fluid">
         <label>Descrição</label>
         <input pInputText type="text" name="descricao" [(ngModel)]="filtro.descricao">
       </div>
 
       <div class="col-12">
-        <label style="display: block">Data</label>
+        <label style="display: block">data</label>
 
         <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoInicio"
           [(ngModel)]="filtro.dataInicio"></p-calendar>
@@ -23,36 +23,37 @@
           [(ngModel)]="filtro.dataFim"></p-calendar>
       </div>
 
-      <div class="col-4">
-        <button pButton class="p-button-secondary" (click)="pesquisar()" type="submit" label="Pesquisar"></button>
+      <div class="sm:col-4 lg:col-4">
+        <button pButton icon="pi pi-search" class="p-button-info" (click)="pesquisar()" type="submit" label="Pesquisar"></button>
       </div>
-      <div class="col-6">
+      <div class="lg:col-6 sm:col-4">
       <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
     </div>
-    <div class="col-2 p-fluid">
-  <a pButton label="Novo Lançamento" routerLink="/lancamento/novo"></a>
+    <div class="lg:col-2 lg:p-fluid">
+  <a pButton  class="p-button-warning" label="Novo Lançamento" routerLink="/lancamento/novo"></a>
 </div>
     </div>
   </form>
 
-  <div class="grid surface-50 row-accessories">
-    <div class="col-12 surface-50 row-accessoriess">
-      <p-table [value]="movimentacao" [responsive]="true" [paginator]="true"  [showCurrentPageReport]="true"  [rows]="4" [rowsPerPageOptions]="[4,8,12]"
-        [totalRecords]="totalRegistros" [(first)]="pagina" (onPage)="aoMudarPagina($event)" #tabela>
+  <div class="grid">
+    <div class="col-12">
+      <p-table [value]="movimentacao" [responsive]="true" [paginator]="true"  [showCurrentPageReport]="true"  [rows]="3" [rowsPerPageOptions]="[3,6,9]"
+        [totalRecords]="totalRegistros"  [(first)]="pagina" (onPage)="aoMudarPagina($event)" #tabela>
         <ng-template pTemplate="header">
           <tr>
-            <th>Descrição</th>
-            <th>Data</th>
-            <th>Tipo</th>
+            <th pSortableColumn="nome">Descrição<p-sortIcon field="nome" /></th>
+            <th pSortableColumn="data" class="col-data-header">Data<p-sortIcon field="data" /></th>
+            <th  pSortableColumn="tipo">Tipo<p-sortIcon field="data" /></th>
+            <th pSortableColumn="centrocusto">Centro de Custo<p-sortIcon field="centrocusto" /></th>
+            <th pSortableColumn="classificacao">Classificaçao<p-sortIcon field="classificacao" /></th>
             <th>Quantidade</th>
-            <th >Unidade</th>
-            <th class="col-valor-header surface-50"></th>
+            <th class="col-valor-header"></th>
           </tr>
         </ng-template>
         <ng-template  pTemplate="body" let-movimentacao>
           <tr>
             <td>
-              <span class="p-column-title surface-50 .row-accessories">Descrição</span>
+              <span class="p-column-title">Descrição</span>
               {{ movimentacao.nome }}
             </td>
 
@@ -65,15 +66,21 @@
               {{ movimentacao.tipo }}
             </td>
             <td>
+              <span class="p-column-title">Centro de Custo</span>
+              <span>
+                {{ movimentacao.centrocusto}}
+              </span>
+            </td>
+            <td>
+              <span class="p-column-title">Classificacao</span>
+              <span>
+                {{ movimentacao.classificacao}}
+              </span>
+            </td>
+            <td>
               <span class="p-column-title">Quantidade</span>
               <span>
                 {{ movimentacao.Quantidade }}
-              </span>
-            </td>
-            <td >
-              <span class="p-column-title">Unidade</span>
-              <span>
-                {{ movimentacao.unidade| uppercase }}
               </span>
             </td>
             <td class="col-acoes ">

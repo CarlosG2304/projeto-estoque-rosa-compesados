@@ -61,7 +61,8 @@ export class LancamentoCadastroComponent implements OnInit {
       { label: 'Litro' },
       { label: 'Caixa' },
       { label: 'Kilo'},
-      { label: 'Metro'}]
+      { label: 'Metro'},
+      { label: 'Balde'}]
       
    
       this.lancamentoService.getAllitens(this.filtro).then(dados => {
@@ -86,13 +87,25 @@ export class LancamentoCadastroComponent implements OnInit {
     }}
   salvaLancamento(form:NgForm){
     this.movimentacao.item = this.item
-     this.movimentacao.tipo = this.value
-     this.movimentacao.centrocusto = this.centrocustoS
-     this.movimentacao.classificacao = this.classificacaoS
-     this.movimentacao.unidade = this.unidadeS.label
+    this.movimentacao.tipo = this.value
+    this.movimentacao.centrocusto = this.centrocustoS
+    this.movimentacao.classificacao = this.classificacaoS
+    this.movimentacao.unidade = this.unidadeS.label
+
+    if(this.view){
+      this.lancamentoService.put(this.movimentacao).then(dados => {
+        console.log(dados)
+        this.messageService.add({ severity: 'success', detail: 'Movimentação alterada com sucesso!' })
+      }
+      ).catch(erro => {
+        this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+      
+      }); 
+    }else{
+    
      if(this.value == "ENTRADA" || this.value == 'SAIDA'){
 
-          this.lancamentoService.post(this.movimentacao).then(dados => {
+        this.lancamentoService.post(this.movimentacao).then(dados => {
      this.item = dados
      this.messageService.add({ severity: 'success', detail: 'Movimentação salva com sucesso!' });
     }) .catch(erro => {
@@ -113,7 +126,7 @@ export class LancamentoCadastroComponent implements OnInit {
     } }
     else{
       this.messageService.add({ severity: 'warn', detail: 'Selecione o tipo do lançamento' });
-    }
+    }}
   }
 
   carregarLancamento(codigo: number) {

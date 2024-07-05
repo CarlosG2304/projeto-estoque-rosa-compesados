@@ -34,38 +34,48 @@ export class ClassificacaoCadastroComponent implements OnInit {
 
   }
 salvarItem(form:NgForm){
-   this.lancamentoService.postItem(this.item).then(dados => {
+    if(this.item.nome){
+      this.lancamentoService.postItem(this.item).then(dados => {
 
-    this.messageService.add({ severity: 'success', detail: 'Item salvo com sucesso!' });
-  }) .catch(erro => {
-    this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-
-  });
-
-
+        this.messageService.add({ severity: 'success', detail: 'Item salvo com sucesso!' });
+      }) .catch(erro => {
+        this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+    
+      });
+    }else{
+      this.messageService.add({ severity: 'warn', detail: 'Campo Vazio' });
+    }
    form.reset()
 
 }
 salvarClassificacao(form:NgForm){
-   this.pessoaService.post(this.classificacao).then(dados => {
 
-    this.messageService.add({ severity: 'success', detail: 'Classificação salva com sucesso!' });
-  }) .catch(erro => {
-    this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+  if(this.classificacao.nome){
+    this.pessoaService.post(this.classificacao).then(dados => {
 
-  });
+      this.messageService.add({ severity: 'success', detail: 'Classificação salva com sucesso!' });
+    }) .catch(erro => {
+      this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
   
+    });
+  }else{
+    this.messageService.add({ severity: 'warn', detail: 'Campo Vazio' });
+  }
    form.reset()
 }
 salvarCentroCusto(form:NgForm){
-  this.categoriaService.postCentroCusto(this.centrocusto).then(dados => {
 
-    this.messageService.add({ severity: 'success', detail: 'Centro de custo salvo com sucesso!' });
-  }) .catch(erro => {
-    this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
-  
-  });
-  
+  if(this.centrocusto.nome){
+    this.categoriaService.postCentroCusto(this.centrocusto).then(dados => {
+
+      this.messageService.add({ severity: 'success', detail: 'Centro de custo salvo com sucesso!' });
+    }) .catch(erro => {
+      this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+    
+    });
+  }else{
+    this.messageService.add({ severity: 'warn', detail: 'Campo Vazio' });
+  }
    form.reset()
 }
 }

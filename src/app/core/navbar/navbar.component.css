@@ -5,6 +5,10 @@
 
 
 
+.navbar-menuitem a:hover {
+    color: #fff;
+}
+
 .navbar-menuitem.ativo {
     background-color: #c8c8c880;
 }

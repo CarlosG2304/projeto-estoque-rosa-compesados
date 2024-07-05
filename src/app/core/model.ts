@@ -34,4 +34,5 @@ export class Movimentacao {
   unidade?:string
   centrocusto? = new centrocusto()
   classificacao? = new classificacao();
+  observacao?:string
 }

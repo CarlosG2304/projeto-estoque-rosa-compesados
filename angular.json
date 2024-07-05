@@ -50,7 +50,6 @@
                 "bundleName": "saga-green",
                 "inject": false
               },
-              
 
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeflex/primeflex.css",
@@ -64,7 +63,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",

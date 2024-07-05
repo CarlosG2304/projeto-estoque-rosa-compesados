@@ -1,8 +1,7 @@
 <div class="container">
-
-  <!-- Pesquisa -->
+  <form autocomplete="off" (ngSubmit)="pesquisar()">
   <div class="grid ">
-    <form autocomplete="off" (ngSubmit)="pesquisar()">
+   
       <div class="col-12">
         <h1>Estoque</h1>
       </div>
@@ -12,20 +11,21 @@
         <input pInputText type="text" name="nome" [(ngModel)]="filtro.Descricao">
       </div>
 
-      <div class="col-12">
+      <div class="col-6">
         <button pButton type="submit" label="Pesquisar"></button>
       </div>
-      <div class="col-12">
+      <div class="col-6">
         <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
       </div>
-    </form>
-  </div>
+ 
+  </div> 
+  </form>
 <!-- (onLazyLoad)="aoMudarPagina($event)"  -->
   <!-- Lista de pessoas -->
   <div class="grid">
     <div class="col-12">
       <p-table [value]="itens" [responsive]="true" [paginator]="true" [rows]="5" 
-      [showCurrentPageReport]="true" [(first)]="pagina" (onPage)="aoMudarPagina($event)"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,15]"[(first)]="pagina" (onPage)="aoMudarPagina($event)"
         [totalRecords]="totalRegistros" #tabela>
         <ng-template pTemplate="header">
           <tr>

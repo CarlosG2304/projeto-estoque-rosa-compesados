@@ -22,10 +22,12 @@ app.get('/movimentacao', (req,res) => {
   
   const select = knex('Movimentação as m')
   .join('Itens as I', 'm.codigoItem', 'I.Id')
-  .select('m.Id','m.Quantidade','m.tipo','m.unidade','m.data','I.nome')
+  .leftJoin('classificacao as c',  'm.codigoClassificacao', 'c.Id')
+  .leftJoin('CentroCusto as cc', 'm.codigoCentroCusto', 'cc.Id')
+  .select('m.Id','m.Quantidade','m.tipo','m.unidade','m.data','I.nome','c.nome as classificacao','cc.nome as centrocusto' )
    .whereILike('I.nome', '%'+req.query.filtro+'%') 
    .whereBetween('data', [req.query.dataInicio,req.query.dataFim])
-
+  .orderBy('data', 'desc')
 
   select.then(data => {
        res.send(data)
@@ -41,6 +43,7 @@ app.get('/movimentacao/relatorio',async(req,res) => {
   .leftJoin('CentroCusto as cc', 'm.codigoCentroCusto', 'cc.Id')
   .select('m.Id', 'Quantidade', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome')
   .orderBy('data')
+ 
   var fonts = {
      Courier: {
     normal: 'Courier',
@@ -75,10 +78,10 @@ app.get('/movimentacao/relatorio',async(req,res) => {
       rows.push(movimentacacao.nomeItem)
       rows.push(movimentacacao.tipo)
       rows.push((movimentacacao.data.getDate() ) + "/" + (movimentacacao.data.getMonth() + 1) + "/" + movimentacacao.data.getFullYear() )
-      rows.push(movimentacacao.Quantidade)
-      rows.push(movimentacacao.unidade)
-        rows.push(movimentacacao.CCNome)
+      rows.push(movimentacacao.CCNome)
       rows.push(movimentacacao.nomeClassificacao)
+      rows.push(movimentacacao.unidade)
+      rows.push(movimentacacao.Quantidade)
       body.push(rows) 
     
     }
@@ -87,15 +90,27 @@ app.get('/movimentacao/relatorio',async(req,res) => {
         text:'Relatorio da movimentação de estoque\n\n', style:'header',
       },
        { table: {
-        widths: [82, 55, 50, 72,52,90,88],
+        widths: ['auto', 55, 50,'auto','auto','auto','auto'],
     
         body: [
-          [{text: "Descrição", style: 'columnsTitle'}, {text: "Tipo" , style: 'columnsTitle'},{text:"Data", style: 'columnsTitle'}, {text:"Quantidade", style: 'columnsTitle'}, {text: "Unidade", style: 'columnsTitle'},{text: "Centro de Custo", style: 'columnsTitle'}, {text: "Classificação", style: 'columnsTitle'}],
+          [{text: "Descrição", style: 'columnsTitle'}, {text: "Tipo" , style: 'columnsTitle'},{text:"Data", style: 'columnsTitle'} ,{text: "Centro de Custo", style: 'columnsTitle'}, {text: "Classificação", style: 'columnsTitle'}, {text: "Unidade", style: 'columnsTitle'},{text:"Quant", style: 'columnsTitle'}],
           ...body
       
       ]
        },
-       alignment: "center",
+       alignment: "left",
+       layout: {hLineWidth: function (i, node) {
+        return (i === 0 || i === node.table.body.length) ? 2 : 1;
+      },
+      vLineWidth: function (i, node) {
+        return (i === 0 || i === node.table.widths.length) ? 2 : 0;
+      },
+      hLineColor: function (i, node) {
+        return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+      },
+      vLineColor: function (i, node) {
+        return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
+      },}
     }
       ],
       defaultStyle: {
@@ -118,9 +133,10 @@ app.get('/movimentacao/relatorio',async(req,res) => {
           bold: true,
           fillColor:"gray",
           color:'#fff',
-          alignment: "center",
+          alignment:'center'
         
          }
+
       }
     };
   const printer =  new PdfPrinter(fonts);
@@ -142,7 +158,7 @@ app.get('/movimentacao/:id', (req,res) => {
   .join('Itens', 'm.codigoItem', 'Itens.Id')
   .fullOuterJoin('classificacao as c',  'm.codigoClassificacao', 'c.Id')
   .fullOuterJoin('CentroCusto as cc', 'm.codigoCentroCusto', 'cc.Id')
-  .select('m.Id', 'Quantidade', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome')
+  .select('m.Id', 'Quantidade', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome', 'observacao')
   .where('m.Id', req.params.id)
   
   select.then(data => {
@@ -163,12 +179,95 @@ app.get('/movimentacao/:id', (req,res) => {
      "classificacao": {
         "Id":  data[0].cId,
         "nome":data[0].nomeClassificacao},
+    "observacao":data[0].observacao
     } 
 
        res.send(movimentacacao)
        
-  })
+  }).catch(error => res.status(500).send(error))
 
+})
+
+app.post('/movimentacao', (req,res) => {
+  if(req.body.centrocusto){
+  movimentacacao = {
+    "Quantidade": req.body.Quantidade,
+    "tipo":  req.body.tipo,
+    "unidade": req.body.unidade,
+    "data": req.body.data,
+    "codigoItem": req.body.item.Id,
+    "codigoCentroCusto":  req.body.centrocusto.Id,
+    "codigoClassificacao": req.body.classificacao.Id,
+    "observacao":req.body.observacao
+  }
+  }else{
+    movimentacacao = {
+      "Quantidade": req.body.Quantidade,
+      "tipo":  req.body.tipo,
+      "unidade": req.body.unidade,
+      "data": req.body.data,
+      "codigoItem": req.body.item.Id}
+  }
+
+
+
+
+  const insert = knex('Movimentação')
+  .insert(movimentacacao)
+
+  insert.then(data => {
+       res.send(data)
+  })
+  .catch(error => res.status(500).send(error))
+   
+       if(req.body.tipo == 'ENTRADA'){
+   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
+        update.then(data => data)
+        .catch(error => console.log(error))
+  }else if(req.body.tipo == 'SAIDA' ){
+        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
+       update.then(data => data)
+       .catch(error => console.log(error))
+      }  
+ 
+})
+
+app.put('/movimentacao', (req,res) => {
+  
+  if(req.body.centrocusto){
+    movimentacacao = {
+      "tipo":  req.body.tipo,
+      "unidade": req.body.unidade,
+      "data": req.body.data,
+      "codigoItem": req.body.item.Id,
+      "codigoCentroCusto":  req.body.centrocusto.Id,
+      "codigoClassificacao": req.body.classificacao.Id,
+      "observacao":req.body.observacao}
+    }else{
+      movimentacacao = {
+        "Quantidade": req.body.Quantidade,
+        "tipo":  req.body.tipo,
+        "unidade": req.body.unidade,
+        "data": req.body.data,
+        "codigoItem": req.body.item.Id}
+    }
+  
+  
+  
+  
+    const update = knex('Movimentação')
+    .update(movimentacacao)
+    .where('Id', req.body.Id)
+  
+    update.then(data => {
+         res.send({Resposta: data})
+    })
+    .catch(error => {
+      console.log(error)
+      res.sendStatus(500)
+
+    })
+     
 })
 
 app.post('/movimentacao', (req,res) => {
@@ -213,10 +312,10 @@ app.post('/movimentacao', (req,res) => {
  
 })
 
-
 app.get('/estoque', (req,res) => {
   const select = knex('Estoque')
   .select('*')
+  .orderBy('nome')
   .whereILike('nome','%'+req.query.filtro+'%' )
   select.then(data => {
        res.send(data)
@@ -274,17 +373,16 @@ app.get('/estoque/relatorio',async(req,res) => {
       content: [{
         columns: [{
         text:'Relatorio do estoque', style:'header'} ,{
-        image: '.\\src\\app\\core\\navbar\\LogoRosa.jpg',
+        image: 'C:\\Users\\Portaria\\Workspace\\projeto-estoque\\src\\app\\core\\navbar\\LogoRosa.jpg',
         style:'logo',
         width: 180,
         margin: [0,0,5,8],
-      }	,{text: 'Data: '+ today.toLocaleDateString()+'' , style:'data'}],
+      },{text: 'Data: '+ today.toLocaleDateString()+'' , style:'data'}],
     },{ table: {
         body: [
           [{text: "Id", style: "columnsTitle"},{text: "Descrição", style: "columnsTitle"}, {text: "Quantidade", style: "columnsTitle"}],
           ...body]
-       }
-       ,alignment: "center",}
+       },alignment: "center",}
       ],
       defaultStyle: {
         font: 'Helvetica',
@@ -368,6 +466,7 @@ app.get('/centroCusto', (req,res) => {
   const select = knex('CentroCusto')
   .select('*')
   .whereILike('nome','%'+req.query.filtro+'%' )
+   .orderBy('nome')
   select.then(data => {
        res.send(data)
   })
@@ -386,6 +485,7 @@ app.get('/classificacao', (req,res) => {
   const select = knex('classificacao')
   .select('*')
   .whereILike('nome','%'+req.query.filtro+'%' )
+  .orderBy('nome')
   select.then(data => {
        res.send(data)
   })

@@ -1,13 +1,12 @@
   <app-navbar></app-navbar>
   <!-- <p-inputSwitch [(ngModel)]="themeSelection" (onChange)="changeTheme($event.checked)"></p-inputSwitch> -->
-   <div class="mt-2 ml-2 col-1">
-  <p-inputSwitch  [(ngModel)]="checked"
+ <div class="mt-2 ml-2">
+  <p-inputSwitch [(ngModel)]="checked"
   (onChange)="changeTheme(checked ? 'arya-green' : 'saga-green')"
   ></p-inputSwitch>
-</div>
   <router-outlet></router-outlet>
   <p-toast></p-toast>
-  
+  </div>
   <p-confirmDialog header="Confirmação" icon="pi pi-question-circle" #confirmacao>
     <p-footer>
       <button type="button" pButton icon="pi pi-check" label="Sim" (click)="confirmacao.accept()"></button>

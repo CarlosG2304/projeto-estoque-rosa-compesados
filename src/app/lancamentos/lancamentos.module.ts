@@ -24,6 +24,7 @@ import { LancamentosRoutingModule } from './lancamentos-routing.module';
     CommonModule,
     FormsModule,
     HttpClientModule,
+
     InputNumberModule,
     InputTextModule,
     ButtonModule,
