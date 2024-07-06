@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService,ConfirmationService, LazyLoadEvent } from 'primeng/api';
 import { ErrorHandlerService } from '../../core/error-handler.service';
-import { Item,centrocusto } from '../../core/model';
 import { PessoaService, PessoaFiltro } from '../pessoa.service';
 import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
 import { CategoriaService } from 'src/app/categorias/categoria.service';

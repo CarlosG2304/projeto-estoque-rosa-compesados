@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../core/error-handler.service';
-import { Estoque, Item, centrocusto, classificacao } from '../../core/model';
+import { Estoque } from '../../core/model';
 import { PessoaService } from '../pessoa.service';
 import { NgForm } from '@angular/forms';
 import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
@@ -15,10 +15,10 @@ import { CategoriaService } from 'src/app/categorias/categoria.service';
 })
 export class ClassificacaoCadastroComponent implements OnInit {
 
-  item:Item = new Item();
+  item:any = {"nome": undefined};
   estoque:Estoque = new Estoque();
-  classificacao: classificacao = new classificacao();
-  centrocusto:centrocusto = new centrocusto();
+  classificacao: any  = {"nome": undefined};
+  centrocusto:any = {"nome": undefined};
   constructor(
     private pessoaService: PessoaService,
     private messageService: MessageService,
@@ -34,6 +34,7 @@ export class ClassificacaoCadastroComponent implements OnInit {
 
   }
 salvarItem(form:NgForm){
+  console.log(this.classificacao)
     if(this.item.nome){
       this.lancamentoService.postItem(this.item).then(dados => {
 
@@ -42,6 +43,16 @@ salvarItem(form:NgForm){
         this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
     
       });
+      this.lancamentoService.postEstoque(this.item).then(dados => {
+        console.log(dados)
+        this.messageService.add({ severity: 'success', detail: 'Item salvo no estoque com sucesso!' });
+      }
+      ).catch(erro => {
+        this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+    
+      });
+
+      console.log(this.item)
     }else{
       this.messageService.add({ severity: 'warn', detail: 'Campo Vazio' });
     }
@@ -49,7 +60,7 @@ salvarItem(form:NgForm){
 
 }
 salvarClassificacao(form:NgForm){
-
+  console.log(this.classificacao)
   if(this.classificacao.nome){
     this.pessoaService.post(this.classificacao).then(dados => {
 

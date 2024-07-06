@@ -5,7 +5,7 @@ import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api'
 
 import { ErrorHandlerService } from 'src/app/core/error-handler.service';
 import { PessoaFiltro, PessoaService } from '../pessoa.service';
-import { Estoque, Item } from 'src/app/core/model';
+import { Estoque } from 'src/app/core/model';
 import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
 
 @Component({

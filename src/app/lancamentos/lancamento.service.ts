@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Item, Movimentacao } from '../core/model';
+import { Movimentacao } from '../core/model';
 
 export class LancamentoFiltro {
   descricao?: string = ''
@@ -50,18 +50,20 @@ post(dados:any):Promise<any>{
 
     return this.http.put(this.movimentacaoUrl, dados).toPromise()
   }
+  putEstoque(dados:any):Promise<any>{
 
+    return this.http.put(this.estoqueURL, dados).toPromise()
+  }
   postItem(dados:any):Promise<any>{
 
     return this.http.post(this.itensUrl, dados).toPromise()
   }
   
   postEstoque(dados:any):Promise<any>{
-     dados.quantidade = 0
     return this.http.post(this.estoqueURL, dados).toPromise()
   }
 
-  editarItem(id:any, item:Item){
+  editarItem(id:any, item:any){
     return this.http.put(this.estoqueURL+ '/'+id, item).toPromise()
   }
 

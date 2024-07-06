@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { LazyLoadEvent } from 'primeng/api';
-import { Item } from 'src/app/core/model';
+
 import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { LancamentoService } from 'src/app/lancamentos/lancamento.service';
   styleUrls: ['./itens.component.css']
 })
 export class ItensComponent implements OnInit {
-itens:Item[] = []
+itens:any[] = []
 totalRegistros:any;
 pagina = 0
 filtro:any = {

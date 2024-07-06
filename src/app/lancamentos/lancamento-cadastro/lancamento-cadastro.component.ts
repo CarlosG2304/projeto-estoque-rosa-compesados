@@ -10,7 +10,7 @@ import { ErrorHandlerService } from 'src/app/core/error-handler.service';
 import { PessoaService } from 'src/app/pessoas/pessoa.service';
 import { LancamentoService } from '../lancamento.service';
 import { CategoriaService } from './../../categorias/categoria.service';
-import {Estoque, Item, Movimentacao, Unidade, centrocusto } from './../../core/model';
+import {Estoque,Movimentacao } from './../../core/model';
 
 @Component({
   selector: 'app-lancamento-cadastro',
@@ -20,18 +20,14 @@ import {Estoque, Item, Movimentacao, Unidade, centrocusto } from './../../core/m
 export class LancamentoCadastroComponent implements OnInit {
 
   estoque: Estoque[] = [];
-  itens:Item[] = [];
+  itens:any[] = [];
   movimentacao:Movimentacao = new Movimentacao();
-  item: Item = new Item();
   estoqueS:Estoque = new Estoque()
-  centrocusto: centrocusto[] = [];
-  centrocustoS: centrocusto = {Id:undefined };
+  centrocusto: any[] = [];
   classificacao: any[] = [];
-  classificacaoS: any = {Id:undefined };
   pessoas: any[] = []
   value:any = 'ENTRADA'
   unidades = ['Unidade','Litro','Caixa', 'Kilo', 'Metro', 'Balde'];
-  unidadeS:Unidade = {};
   view = false;
 
   tipos = [
@@ -62,9 +58,6 @@ export class LancamentoCadastroComponent implements OnInit {
         this.itens = dados
      })
 
-    this.lancamentoService.getEstoque(this.filtro).then(dados => {
-       this.estoque = dados
-    })
 
     this.categoriaService.getcetrocusto(this.filtro).then(dados => {
       this.centrocusto = dados
@@ -97,24 +90,22 @@ export class LancamentoCadastroComponent implements OnInit {
      if(this.value == "ENTRADA" || this.value == 'SAIDA'){
 
         this.lancamentoService.post(this.movimentacao).then(dados => {
-     this.item = dados
      this.messageService.add({ severity: 'success', detail: 'Movimentação salva com sucesso!' });
+      form.reset()
     }) .catch(erro => {
       this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
     
     }); 
     
-      form.reset()
-    if(this.value === 'ENTRADA' && this.movimentacao.Quantidade !== undefined && this.estoqueS.quantidade !== undefined ){
-       this.estoqueS.quantidade = this.estoqueS.quantidade + this.movimentacao.Quantidade
-       this.movimentacao.centrocusto = {}
-       this.movimentacao.classificacao = {}
-
-       this.lancamentoService.editarItem(this.estoqueS.Id, this.estoqueS).then(dados => console.log(dados))   
-    }else if(this.value === 'SAIDA'  && this.movimentacao.Quantidade !== undefined && this.estoqueS.quantidade !== undefined){
-      this.estoqueS.quantidade = this.estoqueS.quantidade - this.movimentacao.Quantidade
-      this.lancamentoService.editarItem(this.item.Id, this.estoqueS).then(dados => console.log(dados))  
-    } }
+     
+  this.lancamentoService.putEstoque(this.movimentacao).then(dados => {
+    console.log(dados)
+    this.messageService.add({ severity: 'success', detail: 'Estoque alterado com sucesso!' });
+  }).catch(error => {
+    this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
+  }) 
+    
+  }
     else{
       this.messageService.add({ severity: 'warn', detail: 'Selecione o tipo do lançamento' });
     }} 
@@ -126,8 +117,6 @@ export class LancamentoCadastroComponent implements OnInit {
       .then(movimentacao => {
         this.movimentacao = movimentacao
       movimentacao.data?  this.movimentacao.data = new Date(movimentacao.data).toLocaleDateString('pt-BR'): null
-       this.centrocustoS = movimentacao.centrocusto
-       this.classificacaoS = movimentacao.classificacao
         this.value = movimentacao.tipo 
        
         console.log(this.movimentacao)

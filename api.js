@@ -220,15 +220,6 @@ app.post('/movimentacao', (req,res) => {
   })
   .catch(error => res.status(500).send(error))
    
-       if(req.body.tipo == 'ENTRADA'){
-   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
-        update.then(data => data)
-        .catch(error => console.log(error))
-  }else if(req.body.tipo == 'SAIDA' ){
-        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
-       update.then(data => data)
-       .catch(error => console.log(error))
-      }  
  
 })
 
@@ -299,16 +290,6 @@ app.post('/movimentacao', (req,res) => {
        res.send(data)
   })
   .catch(error => res.status(500).send(error))
-   
-       if(req.body.tipo == 'ENTRADA'){
-   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
-        update.then(data => data)
-        .catch(error => console.log(error))
-  }else if(req.body.tipo == 'SAIDA' ){
-        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
-       update.then(data => data)
-       .catch(error => console.log(error))
-      }  
  
 })
 
@@ -429,10 +410,21 @@ pdfDoc.end();
     res.end(result)
   })
   
-
-  
-
 })
+
+app.put('/estoque',(req,res) => {
+
+   
+       if(req.body.tipo == 'ENTRADA'){
+   const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
+        update.then(data => res.send(data))
+        .catch(error => res.status(500).send(error))
+  }else if(req.body.tipo == 'SAIDA' ){
+        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
+       update.then(data => res.send(data))
+       .catch(error => res.status(500).send(error))
+      }  
+ })
 
 app.get('/itens', (req,res) => {
   const select = knex('Itens')
@@ -444,22 +436,34 @@ app.get('/itens', (req,res) => {
   })
 
 })
+app.post('/estoque', (req,res) => {
+  novoEstoque = {
+     "nome": req.body.nome,
+     "Quantidade": 0}
+
+   const insertEstoque = knex('Estoque')
+   .insert(novoEstoque)
+  
+    
+   insertEstoque.then(data => {
+    res.send(data)
+   }).catch(error => {
+    res.status(500).send(error)
+   })
+ 
+ })
+
 app.post('/itens', (req,res) => {
- novoEstoque = {
-    "nome": req.body.nome,
-    "Quantidade": 0}
+
   const insertItens = knex('Itens')
   .insert(req.body)
-  const insertEstoque = knex('Estoque')
-  .insert(novoEstoque)
  
-   
    insertItens.then(data => {
        res.send(data)
-  })
-  insertEstoque.then(data => {
-  
-  })
+  }).catch(error => {
+    res.status(500).send(error)
+   })
+
 
 })
 app.get('/centroCusto', (req,res) => {
