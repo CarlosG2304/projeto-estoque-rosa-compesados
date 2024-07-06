@@ -49,7 +49,7 @@ export class LancamentosPesquisaComponent implements OnInit {
     this.title.setTitle('Movimentações');
    this.lancamentoService.getAll(this.filtro).then(dados => {
     this.movimentacao = dados
-    console.log(this.movimentacao)
+  
   }).then(() =>  this.totalRegistros = this.movimentacao.length);
    this.totalRegistros = this.movimentacao.length
 

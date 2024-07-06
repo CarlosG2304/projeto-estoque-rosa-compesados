@@ -33,8 +33,8 @@
 
   <div class="col-12 md:col-6 p-fluid">
         <label>Itens</label>
-        <p-dropdown [options]="itens" class="p-dropdown-items"  optionLabel="nome" placeholder="Selecione" [(ngModel)]="item"
-        [filter]="true" name="Itens" #Itens="ngModel" [required]="true"></p-dropdown>
+        <p-dropdown [options]="itens" class="p-dropdown-items"  optionLabel="nome" placeholder="Selecione" [(ngModel)]="movimentacao.item"
+        [filter]="true" name="Itens" #Itens [required]="true"></p-dropdown>
       </div>
       
       <div class="col-12 md:col-3 p-fluid">
@@ -44,17 +44,17 @@
       </div>
       <div *ngIf="tipo.value === 'SAIDA'" class="col-12 md:col-6 p-fluid">
         <label>Centro de Custo</label>
-        <p-dropdown [options]="centrocusto"  optionLabel="nome" placeholder="Selecione" name="centrodcusto" [(ngModel)]="centrocustoS"
+        <p-dropdown [options]="centrocusto"  optionLabel="nome" placeholder="Selecione" name="centrodcusto" [(ngModel)]="movimentacao.centrocusto"
           [filter]="true" #centrodcusto="ngModel" [required]="true"></p-dropdown>
         </div>
       <div *ngIf="tipo.value === 'SAIDA'" class="col-12 md:col-6 p-fluid">
         <label>Classificação</label>
-        <p-dropdown [options]="classificacao"  optionLabel="nome" placeholder="Selecione" name="Classificacao" [(ngModel)]="classificacaoS"
+        <p-dropdown [options]="classificacao"  optionLabel="nome" placeholder="Selecione" name="Classificacao" [(ngModel)]="movimentacao.classificacao"
           [filter]="true" #Classificacao="ngModel" [required]="true"></p-dropdown>
         </div>
         <div  class="col-12 md:col-6 p-fluid">
           <label>Unidade</label>
-          <p-dropdown [options]="unidades"  optionLabel="label" placeholder="Selecione" name="Unidades" [(ngModel)]="unidadeS"
+          <p-dropdown [options]="unidades"   placeholder="Selecione" name="Unidades" [(ngModel)]="movimentacao.unidade"
             [filter]="true" #Unidade="ngModel" [required]="true"></p-dropdown>
           </div>
   
@@ -64,7 +64,7 @@
         <textarea pInputTextarea rows="3" name="observacao" [(ngModel)]="movimentacao.observacao"></textarea>
       </div> 
       <div class="col-12">
-        <button pButton type="submit" label="Salvar" [disabled]="lancamentoForm.invalid" (click)="salvaLancamento(lancamentoForm)" ></button>
+        <button pButton type="submit" [disabled]="lancamentoForm.invalid" label="Salvar" (click)="salvaLancamento(lancamentoForm)" ></button>
         <button pButton label="Voltar" routerLink="/movimentacao"></button>
       </div>
     </div>

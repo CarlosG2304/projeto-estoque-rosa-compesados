@@ -204,7 +204,7 @@ app.post('/movimentacao', (req,res) => {
     movimentacacao = {
       "Quantidade": req.body.Quantidade,
       "tipo":  req.body.tipo,
-      "unidade": req.body.unidade,
+      "unidade": req.body.unidade.label,
       "data": req.body.data,
       "codigoItem": req.body.item.Id}
   }

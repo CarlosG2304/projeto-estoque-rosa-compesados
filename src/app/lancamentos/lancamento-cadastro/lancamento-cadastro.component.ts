@@ -30,7 +30,7 @@ export class LancamentoCadastroComponent implements OnInit {
   classificacaoS: any = {Id:undefined };
   pessoas: any[] = []
   value:any = 'ENTRADA'
-  unidades:Unidade[] = [];
+  unidades = ['Unidade','Litro','Caixa', 'Kilo', 'Metro', 'Balde'];
   unidadeS:Unidade = {};
   view = false;
 
@@ -56,13 +56,6 @@ export class LancamentoCadastroComponent implements OnInit {
  
 
     this.title.setTitle('Novo lançamento')
-    this.unidades =   [
-      { label: 'Unidade' },
-      { label: 'Litro' },
-      { label: 'Caixa' },
-      { label: 'Kilo'},
-      { label: 'Metro'},
-      { label: 'Balde'}]
       
    
       this.lancamentoService.getAllitens(this.filtro).then(dados => {
@@ -86,11 +79,9 @@ export class LancamentoCadastroComponent implements OnInit {
   
     }}
   salvaLancamento(form:NgForm){
-    this.movimentacao.item = this.item
+
     this.movimentacao.tipo = this.value
-    this.movimentacao.centrocusto = this.centrocustoS
-    this.movimentacao.classificacao = this.classificacaoS
-    this.movimentacao.unidade = this.unidadeS.label
+    console.log(this.movimentacao)
 
     if(this.view){
       this.lancamentoService.put(this.movimentacao).then(dados => {
@@ -126,7 +117,7 @@ export class LancamentoCadastroComponent implements OnInit {
     } }
     else{
       this.messageService.add({ severity: 'warn', detail: 'Selecione o tipo do lançamento' });
-    }}
+    }} 
   }
 
   carregarLancamento(codigo: number) {
@@ -135,13 +126,13 @@ export class LancamentoCadastroComponent implements OnInit {
       .then(movimentacao => {
         this.movimentacao = movimentacao
       movimentacao.data?  this.movimentacao.data = new Date(movimentacao.data).toLocaleDateString('pt-BR'): null
-       this.item = this.movimentacao.item 
        this.centrocustoS = movimentacao.centrocusto
        this.classificacaoS = movimentacao.classificacao
         this.value = movimentacao.tipo 
-        this.unidadeS =  { label: movimentacao.unidade }
+       
+        console.log(this.movimentacao)
       },
-        erro => this.errorHandler.handle(erro));
+        erro => this.errorHandler.handle(erro)); 
   }
 /* 
     this.carregarCategorias()
