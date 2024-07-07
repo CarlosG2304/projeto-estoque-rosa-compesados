@@ -18,7 +18,8 @@ export class LancamentoService {
   movimentacaoUrl = 'http://localhost:3001/movimentacao';
   movimentacaoUrlS = 'http://localhost:3001/entradas';
   itensUrl = 'http://localhost:3001/itens';
- estoqueURL ='http://localhost:3001/estoque'
+  estoqueURL ='http://localhost:3001/estoque'
+  saldoURL = 'http://localhost:3001/saldo'
  params = new HttpParams();
   constructor(private http: HttpClient,
     private datePipe: DatePipe) { }
@@ -34,6 +35,15 @@ getAllitens(filtro:any):Promise<any>{
   this.params = this.params.set('filtro', filtro.Descricao)
   return this.http.get(this.itensUrl, {params: this.params}).toPromise()
   }
+
+  getSaldo(filtro:any):Promise<any>{
+    this.params = this.params.set('filtro', filtro.descricao)
+    this.params = this.params.set('dataInicio', filtro.dataInicio)
+    this.params = this.params.set('dataFim', filtro.dataFim) 
+    this.params = this.params.set('tipo', filtro.tipo) 
+    return this.http.get(this.saldoURL, {params: this.params}).toPromise()
+    }
+    
 
   getEstoque(filtro:any): Promise<any>{
     this.params = this.params.set('filtro', filtro.Descricao)
@@ -54,6 +64,13 @@ post(dados:any):Promise<any>{
 
     return this.http.put(this.estoqueURL, dados).toPromise()
   }
+
+  putSaldo(dados:any):Promise<any>{
+
+    return this.http.put(this.saldoURL, dados).toPromise()
+  }
+
+
   postItem(dados:any):Promise<any>{
 
     return this.http.post(this.itensUrl, dados).toPromise()
@@ -62,6 +79,11 @@ post(dados:any):Promise<any>{
   postEstoque(dados:any):Promise<any>{
     return this.http.post(this.estoqueURL, dados).toPromise()
   }
+  postSaldo(dados:any):Promise<any>{
+    return this.http.post(this.saldoURL, dados).toPromise()
+  }
+
+
 
   editarItem(id:any, item:any){
     return this.http.put(this.estoqueURL+ '/'+id, item).toPromise()

@@ -20,7 +20,7 @@ filtro:any = {
 
   ngOnInit(): void {
     this.title.setTitle('Itens');
-   this.lacamentoService.getAllitens(this.filtro).then(dados => {
+   this.lacamentoService.getSaldo(this.filtro).then(dados => {
       this.itens = dados
    }
    )
@@ -29,7 +29,7 @@ filtro:any = {
 
 pesquisar(){
   this.pagina = 0
-  this.lacamentoService.getAllitens(this.filtro).then(dados => {
+  this.lacamentoService.getSaldo(this.filtro).then(dados => {
     this.itens = dados
  })
 

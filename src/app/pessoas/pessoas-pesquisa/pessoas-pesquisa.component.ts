@@ -47,7 +47,7 @@ export class PessoasPesquisaComponent implements OnInit {
       this.itens = dados;
 
       this.totalRegistros = dados.length;
-
+      console.log(dados)
     
     });
     

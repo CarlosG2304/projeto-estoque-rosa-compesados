@@ -16,5 +16,6 @@ export class Movimentacao {
   unidade?:string
   centrocusto? = {}
   classificacao?  = {}
+  valorUnitario?:number
   observacao?:string
 }

@@ -12,10 +12,12 @@ import { LancamentosModule } from './lancamentos/lancamentos.module';
 import { PessoasModule } from './pessoas/pessoas.module';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppRoutingModule } from './app-routing.module';
+import { SaldoComponent } from './saldo/saldo.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+ 
   ],
   imports: [
      BrowserModule,

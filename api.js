@@ -293,8 +293,72 @@ app.post('/movimentacao', (req,res) => {
  
 })
 
+app.get('/saldo', (req,res) => {
+  
+  if(req.query.tipo == 'SAIDA'){
+  const select = knex('Saldo as s')
+  .select('E.Id', 'E.nome',knex.raw('SUM("m"."Quantidade" - "s"."quantidade") as Quantidade'), knex.raw('SUM(("m"."Quantidade" - "s"."quantidade") * "s"."Valor_unitario") as Saldo'))
+  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
+  .leftJoin('Movimentação as m', 'm.Id', 's.codigoMovimentacao' )
+  .whereILike('E.nome', '%'+req.query.filtro+'%') 
+  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim])
+  .groupBy('E.Id')
+  select.then(data => {
+       res.send(data)
+  })  
+} else if(req.query.tipo == 'ENTRADA'){
+  const select = knex('Saldo as s')
+  .select('E.Id', 'E.nome',knex.raw('SUM( "s"."quantidade") AS Quantidade'), knex.raw('SUM( "s"."quantidade" * "s"."Valor_unitario") as Saldo'))
+  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
+  .leftJoin('Movimentação as m', 'm.Id', 's.codigoMovimentacao' )
+  .whereILike('E.nome', '%'+req.query.filtro+'%') 
+  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim])
+  .groupBy('E.Id')
+  select.then(data => {
+       res.send(data)
+  })
+}
+
+})
+
+app.put('/saldo', (req,res) => {
+  
+
+  const update = knex.raw('Update  public."Saldo" set "quantidade" = "quantidade" - ? WHERE "Id" = (SELECT "Id" FROM "Saldo" WHERE  "codigoItem" = ? And "quantidade" != 0 ORDER BY "data" limit 1 )', [req.body.Quantidade,req.body.item.Id])
+  update.then(data => {
+       res.send(data)
+       console.log(data)
+  }).catch(error => {
+    res.status(500).send(error)
+  })
+
+})
+
+app.post('/saldo', (req,res) => {
+  
+  saldo = {
+    "quantidade": req.body.Quantidade,
+    "Unidade": req.body.unidade,
+    "data": req.body.data,
+    "codigoItem": req.body.item.Id,
+    "Valor_unitario": req.body.valorUnitario
+  }
+
+  console.log(req.body)
+  console.log(saldo)
+
+  const insert = knex('Saldo')
+  .insert(saldo)
+  insert.then(data => {
+       res.send(data)
+  }).catch(error => {
+    res.status(500).send(error)
+  })
+
+})
+
 app.get('/estoque', (req,res) => {
-  const select = knex('Estoque')
+  const select = knex('Estoque as E')
   .select('*')
   .orderBy('nome')
   .whereILike('nome','%'+req.query.filtro+'%' )
@@ -505,6 +569,7 @@ app.post('/classificacao', (req,res) => {
   })
 
 })
+
 
 
 app.listen(port)

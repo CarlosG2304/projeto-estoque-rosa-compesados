@@ -90,8 +90,9 @@ export class LancamentoCadastroComponent implements OnInit {
      if(this.value == "ENTRADA" || this.value == 'SAIDA'){
 
         this.lancamentoService.post(this.movimentacao).then(dados => {
+      console.log(dados)
      this.messageService.add({ severity: 'success', detail: 'Movimentação salva com sucesso!' });
-      form.reset()
+     form.reset()
     }) .catch(erro => {
       this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
     
@@ -104,6 +105,20 @@ export class LancamentoCadastroComponent implements OnInit {
   }).catch(error => {
     this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
   }) 
+      if(this.value == "ENTRADA" ){
+    this.lancamentoService.postSaldo(this.movimentacao).then(dados => {
+      console.log(dados)
+      this.messageService.add({ severity: 'success', detail: 'Saldo salvo com sucesso!' });
+    }).catch(error => {
+      this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
+    })}else{
+      this.lancamentoService.putSaldo(this.movimentacao).then(dados => {
+        this.messageService.add({ severity: 'success', detail: 'Saldo alterado com sucesso!' });
+        console.log(dados)}
+      ).catch(error => {
+        this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
+      }) 
+    }
     
   }
     else{

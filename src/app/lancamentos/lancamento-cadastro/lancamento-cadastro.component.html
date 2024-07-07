@@ -42,6 +42,11 @@
         <p-inputNumber  [disabled]="view"  placeholder="0" [(ngModel)]="movimentacao.Quantidade"
           #valor="ngModel"  imode="decimal" [maxFractionDigits]="2" [required]="true" name="valor"></p-inputNumber>
       </div>
+      <div *ngIf="tipo.value === 'ENTRADA'" class="col-12 md:col-3 p-fluid">
+        <label>Valor Unitario</label>
+        <p-inputNumber  [disabled]="view"  placeholder="0" [(ngModel)]="movimentacao.valorUnitario"
+          #valor="ngModel"  imode="decimal" [maxFractionDigits]="2" [required]="false" name="valor"></p-inputNumber>
+      </div>
       <div *ngIf="tipo.value === 'SAIDA'" class="col-12 md:col-6 p-fluid">
         <label>Centro de Custo</label>
         <p-dropdown [options]="centrocusto"  optionLabel="nome" placeholder="Selecione" name="centrodcusto" [(ngModel)]="movimentacao.centrocusto"

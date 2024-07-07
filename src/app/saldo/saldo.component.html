@@ -1,0 +1,94 @@
+<div class="container">
+    <form autocomplete="off" (ngSubmit)="pesquisar()">
+    <div class="grid ">
+     
+        <div class="col-12">
+          <h1>Saldo</h1>
+        </div>
+        <div class="col-12">
+            <p-selectButton [options]="tipos"  #tipo name="tipo" [(ngModel)]="filtro.tipo" ></p-selectButton>
+          </div>
+        <div class="col-12 p-fluid">
+          <label>Nome</label>
+          <input pInputText type="text" name="nome" [(ngModel)]="filtro.descricao">
+        </div>
+        <div class="col-12">
+            <label style="display: block">data</label>
+    
+            <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoInicio"
+              [(ngModel)]="filtro.dataInicio"></p-calendar>
+    
+            <label class="label">até</label>
+            <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoFim"
+              [(ngModel)]="filtro.dataFim"></p-calendar>
+          </div>
+    
+        <div class="col-6">
+          <button pButton type="submit" label="Pesquisar"></button>
+        </div>
+      <!--   <div class="col-6">
+          <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
+        </div>
+    -->
+    </div> 
+    </form>
+  <!-- (onLazyLoad)="aoMudarPagina($event)"  -->
+    <!-- Lista de pessoas -->
+    <div class="grid">
+      <div class="col-12">
+        <p-table [value]="itens" [responsive]="true" [paginator]="true" [rows]="5" 
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,15]"[(first)]="pagina" (onPage)="aoMudarPagina($event)"
+          [totalRecords]="totalRegistros" #tabela>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Item</th>
+              <th>Quantidade</th>
+              <th>Saldo</th>
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="body" let-itens>
+            <tr>
+              <td>
+                <span class="p-column-title">Item</span>
+                {{ itens.nome }}
+              </td>
+              <td>
+                <span class="p-column-title">Quantidade</span>
+                {{ itens.quantidade }}
+              </td>
+              <td>
+                <span class="p-column-title">Quantidade</span>
+                {{ itens.saldo | currency: 'BRL' }}
+              </td>
+           <!--    <td>
+                <span class="p-column-title">Status</span>
+                <a href="javascript:;" [pTooltip]="pessoa.ativo ? 'Desativar' : 'Ativar'" tooltipPosition="top"
+                  (click)="alternarStatus(pessoa)">
+                  {{ pessoa.ativo ? 'Ativo' : 'Inativo' }}
+                </a>
+              </td> -->
+             <!--  <td class="col-acoes">
+                <span class="p-column-title"></span>
+                <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                  [routerLink]="['/pessoas', pessoa.codigo]"></a>
+                <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
+                  (click)="confirmarExclusao(pessoa)"></button>
+              </td>
+            --> 
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5">
+                Nenhuma Item encontrado
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+  
+    </div>
+  
+  </div>

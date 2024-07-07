@@ -31,7 +31,7 @@ export class ClassificacaoCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.title.setTitle('Cadastros');
   }
 salvarItem(form:NgForm){
   console.log(this.classificacao)

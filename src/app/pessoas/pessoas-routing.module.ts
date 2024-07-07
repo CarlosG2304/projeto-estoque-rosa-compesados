@@ -7,6 +7,7 @@ import { ClassificacaoComponent } from './classificacao/classificacao.component'
 import { ClassificacaoCadastroComponent } from './classificacao-cadastro/classificacao-cadastro.component';
 import { ItensComponent } from './itens/itens.component';
 import { CentrocustoComponent } from './centrocusto/centrocusto.component';
+import { SaldoComponent } from '../saldo/saldo.component';
 
 const routes: Routes = [
   { path: 'estoque', component: PessoasPesquisaComponent },
@@ -16,6 +17,8 @@ const routes: Routes = [
   { path: 'classificacao', component: ClassificacaoComponent },
   { path: 'centrocusto', component: CentrocustoComponent },
   { path: 'cadastros', component: ClassificacaoCadastroComponent },
+  { path: 'saldo', component: SaldoComponent },
+
 ];
 
 @NgModule({
