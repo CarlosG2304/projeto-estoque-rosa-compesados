@@ -62,7 +62,7 @@ export class SaldoComponent {
     
   }
   relatorio(){
-    window.open("http://localhost:3001/estoque/relatorio")
+    window.open("http://localhost:3001/saldo/relatorio")
   } 
   
     aoMudarPagina(event: LazyLoadEvent) {

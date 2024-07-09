@@ -212,8 +212,7 @@ app.post('/movimentacao', (req,res) => {
 
 
 
-  const insert = knex('Movimentação')
-  .insert(movimentacacao)
+  const insert =  knex.raw(`INSERT INTO public."Movimentação"("Quantidade", tipo, unidade, data, "CodigoSaldo",  "codigoItem") VALUES (?,?, ?, ?,nextval('"CodigoSaldo_seq"'::regclass), ?)`, [req.body.Quantidade,req.body.tipo, req.body.unidade,req.body.data,req.body.item.Id])
 
   insert.then(data => {
        res.send(data)
@@ -261,45 +260,13 @@ app.put('/movimentacao', (req,res) => {
      
 })
 
-app.post('/movimentacao', (req,res) => {
-  if(req.body.centrocusto){
-  movimentacacao = {
-    "Quantidade": req.body.Quantidade,
-    "tipo":  req.body.tipo,
-    "unidade": req.body.unidade,
-    "data": req.body.data,
-    "codigoItem": req.body.item.Id,
-    "codigoCentroCusto":  req.body.centrocusto.Id,
-    "codigoClassificacao": req.body.classificacao.Id}
-  }else{
-    movimentacacao = {
-      "Quantidade": req.body.Quantidade,
-      "tipo":  req.body.tipo,
-      "unidade": req.body.unidade,
-      "data": req.body.data,
-      "codigoItem": req.body.item.Id}
-  }
-
-
-
-
-  const insert = knex('Movimentação')
-  .insert(movimentacacao)
-
-  insert.then(data => {
-       res.send(data)
-  })
-  .catch(error => res.status(500).send(error))
- 
-})
-
 app.get('/saldo', (req,res) => {
   
   if(req.query.tipo == 'SAIDA'){
   const select = knex('Saldo as s')
   .select('E.Id', 'E.nome',knex.raw('SUM("m"."Quantidade" - "s"."quantidade") as Quantidade'), knex.raw('SUM(("m"."Quantidade" - "s"."quantidade") * "s"."Valor_unitario") as Saldo'))
   .leftJoin('Estoque as E', 's.codigoItem','E.Id')
-  .leftJoin('Movimentação as m', 'm.Id', 's.codigoMovimentacao' )
+  .leftJoin('Movimentação as m', 'm.CodigoSaldo', 's.codigoMovimentacao' )
   .whereILike('E.nome', '%'+req.query.filtro+'%') 
   .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim])
   .groupBy('E.Id')
@@ -320,14 +287,136 @@ app.get('/saldo', (req,res) => {
 }
 
 })
+app.get('/saldo/relatorio', async(req,res) => {
+  
 
+  const select =  await knex('Saldo as s')
+  .select('E.nome','s.data',knex.raw('SUM("m"."Quantidade" - "s"."quantidade") as Quantidade'), knex.raw('SUM(("m"."Quantidade" - "s"."quantidade") * "s"."Valor_unitario") as Valor_Total'),  knex.raw('avg("s"."Valor_unitario" ) As Valor_Unitario '))
+  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
+  .leftJoin('Movimentação as m', 'm.CodigoSaldo', 's.codigoMovimentacao' )
+  /*  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim]) */
+  .whereRaw('"m"."Quantidade" - "s"."quantidade" != 0', )
+  .groupBy('E.Id')
+  .groupBy('s.data')
+  .orderBy('s.data')
+  .orderBy('E.nome')
+  
+  
+ 
+  var fonts = {
+    Courier: {
+   normal: 'Courier',
+   bold: 'Courier-Bold',
+   italics: 'Courier-Oblique',
+   bolditalics: 'Courier-BoldOblique'
+ },
+ Helvetica: {
+   normal: 'Helvetica',
+   bold: 'Helvetica-Bold',
+   italics: 'Helvetica-Oblique',
+   bolditalics: 'Helvetica-BoldOblique'
+ },
+ Times: {
+   normal: 'Times-Roman',
+   bold: 'Times-Bold',
+   italics: 'Times-Italic',
+   bolditalics: 'Times-BoldItalic'
+ },
+ Symbol: {
+   normal: 'Symbol'
+ },
+ ZapfDingbats: {
+   normal: 'ZapfDingbats'
+ }
+   };
+
+
+   body = []
+   for(let movimentacacao of select){
+     rows = []
+     rows.push((movimentacacao.data.getMonth() + 1) + "/" + movimentacacao.data.getFullYear() )
+     rows.push(movimentacacao.nome)
+     rows.push('R$'+parseFloat(movimentacacao.valor_unitario).toFixed(2).toString().replace(".", ","))
+     rows.push(movimentacacao.quantidade)
+     rows.push(movimentacacao.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+    
+     body.push(rows) 
+   
+   }
+   var docDefinition = {
+     content: [{
+       text:'Relatorio da Saida de estoque\n\n', style:'header',
+     },
+      { table: {
+       widths: ['auto','auto','auto','auto','auto'],
+   
+       body: [
+         [{text: "Mês", style: 'columnsTitle'}, {text: "Item" , style: 'columnsTitle'},{text:"Valor Unitario", style: 'columnsTitle'},{text:"Quant", style: 'columnsTitle'} ,{text: "Valor Total", style: 'columnsTitle'},],
+         ...body
+     
+     ]
+      },
+      alignment: "center",
+      layout: {hLineWidth: function (i, node) {
+       return (i === 0 || i === node.table.body.length) ? 2 : 1;
+     },
+     vLineWidth: function (i, node) {
+       return (i === 0 || i === node.table.widths.length) ? 2 : 0;
+     },
+     hLineColor: function (i, node) {
+       return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+     },
+     vLineColor: function (i, node) {
+       return (i === 0 || i === node.table.widths.length) ? 'black' : 'white';
+     },}
+   }
+     ],
+     defaultStyle: {
+       font: 'Helvetica',
+       fontSize: 11,
+     
+     },
+     styles: {
+       header: {
+         font:'Courier',
+         fontSize: 16,
+         bold: true,
+         alignment: "center",
+         color:'gray'
+     
+     
+       },
+       columnsTitle: {
+         fontSize: 13,
+         bold: true,
+         fillColor:"gray",
+         color:'#fff',
+         alignment:'center'
+       
+        }
+
+     }
+   };
+ const printer =  new PdfPrinter(fonts);
+ const pdfDoc = printer.createPdfKitDocument(docDefinition)
+ const chunks = []
+ pdfDoc.on("data", (chunk) => {
+   chunks.push(chunk)
+ })
+pdfDoc.end();
+ pdfDoc.on("end", () => {
+   const result = Buffer.concat(chunks)
+   res.end(result)
+ })
+
+
+})
 app.put('/saldo', (req,res) => {
   
 
   const update = knex.raw('Update  public."Saldo" set "quantidade" = "quantidade" - ? WHERE "Id" = (SELECT "Id" FROM "Saldo" WHERE  "codigoItem" = ? And "quantidade" != 0 ORDER BY "data" limit 1 )', [req.body.Quantidade,req.body.item.Id])
   update.then(data => {
        res.send(data)
-       console.log(data)
   }).catch(error => {
     res.status(500).send(error)
   })
@@ -344,8 +433,7 @@ app.post('/saldo', (req,res) => {
     "Valor_unitario": req.body.valorUnitario
   }
 
-  console.log(req.body)
-  console.log(saldo)
+
 
   const insert = knex('Saldo')
   .insert(saldo)
