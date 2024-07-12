@@ -47,13 +47,12 @@ export class PessoasPesquisaComponent implements OnInit {
       this.itens = dados;
 
       this.totalRegistros = dados.length;
-      console.log(dados)
     
     });
     
   }
   relatorio(){
-    window.open("http://localhost:3001/estoque/relatorio")
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/estoque/relatorio")
   } 
   
   aoMudarPagina(event: LazyLoadEvent) {

@@ -34,7 +34,6 @@ export class ClassificacaoCadastroComponent implements OnInit {
     this.title.setTitle('Cadastros');
   }
 salvarItem(form:NgForm){
-  console.log(this.classificacao)
     if(this.item.nome){
       this.lancamentoService.postItem(this.item).then(dados => {
 
@@ -44,7 +43,6 @@ salvarItem(form:NgForm){
     
       });
       this.lancamentoService.postEstoque(this.item).then(dados => {
-        console.log(dados)
         this.messageService.add({ severity: 'success', detail: 'Item salvo no estoque com sucesso!' });
       }
       ).catch(erro => {
@@ -52,7 +50,6 @@ salvarItem(form:NgForm){
     
       });
 
-      console.log(this.item)
     }else{
       this.messageService.add({ severity: 'warn', detail: 'Campo Vazio' });
     }
@@ -60,7 +57,6 @@ salvarItem(form:NgForm){
 
 }
 salvarClassificacao(form:NgForm){
-  console.log(this.classificacao)
   if(this.classificacao.nome){
     this.pessoaService.post(this.classificacao).then(dados => {
 

@@ -1,29 +1,38 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Movimentacao } from '../core/model';
+
+
+const date = new Date();
+const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+const firstDayDate = firstDay.toLocaleDateString()
+const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+const lastDayDate = lastDay.toLocaleDateString()
 
 export class LancamentoFiltro {
   descricao?: string = ''
-  dataInicio?: string = '2024-01-01'
-  dataFim?: string = '2025-01-01'
+  dataInicio?: string = firstDayDate
+  dataFim?: string = lastDayDate
 
 }
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class LancamentoService {
 
-  movimentacaoUrl = 'http://localhost:3001/movimentacao';
-  movimentacaoUrlS = 'http://localhost:3001/entradas';
-  itensUrl = 'http://localhost:3001/itens';
-  estoqueURL ='http://localhost:3001/estoque'
-  saldoURL = 'http://localhost:3001/saldo'
+  movimentacaoUrl = 'http:'+window.location.href.toString().split(':')[1]+':3001/movimentacao';
+  movimentacaoUrlS = 'http:'+window.location.href.toString().split(':')[1]+':3001/entradas';
+  itensUrl = 'http:'+window.location.href.toString().split(':')[1]+':3001/itens';
+  estoqueURL ='http:'+window.location.href.toString().split(':')[1]+':3001/estoque'
+  saldoURL = 'http:'+window.location.href.toString().split(':')[1]+':3001/saldo'
  params = new HttpParams();
   constructor(private http: HttpClient,
     private datePipe: DatePipe) { }
 
+    
 getAll(filtro:any):Promise<any>{
   this.params = this.params.set('filtro', filtro.descricao)
   this.params = this.params.set('dataInicio', filtro.dataInicio)
@@ -51,7 +60,10 @@ getAllitens(filtro:any):Promise<any>{
   }
   
  
-
+  getUnitarios(codigo:any){
+    this.params = this.params.set('codigoItem', codigo.Id)
+    return this.http.get('http:'+window.location.href.toString().split(':')[1]+':3001/valoresUnitarios', {params: this.params}).toPromise()
+  }
 post(dados:any):Promise<any>{
 
     return this.http.post(this.movimentacaoUrl, dados).toPromise()
@@ -70,7 +82,10 @@ post(dados:any):Promise<any>{
     return this.http.put(this.saldoURL, dados).toPromise()
   }
 
+  putEdicao(dados:any):Promise<any>{
 
+    return this.http.put('http:'+window.location.href.toString().split(':')[1]+':3001/estoque/edicao', dados).toPromise()
+  }
   postItem(dados:any):Promise<any>{
 
     return this.http.post(this.itensUrl, dados).toPromise()

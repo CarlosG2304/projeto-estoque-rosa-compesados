@@ -5,10 +5,16 @@ import { Title } from '@angular/platform-browser';
 import { Estoque } from '../core/model';
 import { DatePipe } from '@angular/common';
 
+const date = new Date();
+const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+const firstDayDate = firstDay.toLocaleDateString()
+const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+const lastDayDate = lastDay.toLocaleDateString()
+
 export class SaldoFiltro {
   descricao?: string = ''
-  dataInicio?: string = '2024-01-01'
-  dataFim?: string = '2025-01-01'
+  dataInicio?: string = firstDayDate
+  dataFim?: string = lastDayDate
   tipo = 'SAIDA'
 }
 
@@ -49,20 +55,23 @@ export class SaldoComponent {
 
   pesquisar(): void {
     this.pagina = 0 
-    this.filtro.dataInicio =   this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
+    if(typeof this.filtro.dataInicio === 'object'){
+    this.filtro.dataInicio =  this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
+  }
+    if(typeof this.filtro.dataFim === 'object'){
     this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'dd/MM/yyyy')?.toString()
+    }
     this.lancamento.getSaldo(this.filtro)
     .then((dados: any) => {
       this.itens = dados;
 
       this.totalRegistros = dados.length;
-      console.log(dados)
     
     });
     
   }
   relatorio(){
-    window.open("http://localhost:3001/saldo/relatorio")
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/saldo/relatorio")
   } 
   
     aoMudarPagina(event: LazyLoadEvent) {

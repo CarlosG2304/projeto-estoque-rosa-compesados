@@ -62,8 +62,12 @@ export class LancamentosPesquisaComponent implements OnInit {
   }
   pesquisar(): void {
     this.pagina = 0
-    this.filtro.dataInicio =   this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
-    this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'dd/MM/yyyy')?.toString()
+    if(typeof this.filtro.dataInicio === 'object'){
+      this.filtro.dataInicio =  this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
+    }
+      if(typeof this.filtro.dataFim === 'object'){
+      this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'dd/MM/yyyy')?.toString()
+      }
     this.lancamentoService.getAll(this.filtro)
       .then((resultado: any) => {
         this.movimentacao = resultado;
@@ -76,7 +80,7 @@ export class LancamentosPesquisaComponent implements OnInit {
   }
 
   relatorio(){
-    window.open("http://localhost:3001/movimentacao/relatorio")
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/movimentacao/relatorio")
   }
 
   aoMudarPagina(event: LazyLoadEvent) {

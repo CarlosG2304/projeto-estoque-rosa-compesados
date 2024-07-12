@@ -22,28 +22,31 @@
             <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }" name="vencimentoFim"
               [(ngModel)]="filtro.dataFim"></p-calendar>
           </div>
-    
         <div class="col-6">
           <button pButton type="submit" label="Pesquisar"></button>
         </div>
         <div class="col-6">
           <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
         </div>
-   
+      <!--   <div class="col-6">
+          <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
+        </div>
+    -->
     </div> 
     </form>
   <!-- (onLazyLoad)="aoMudarPagina($event)"  -->
     <!-- Lista de pessoas -->
     <div class="grid">
       <div class="col-12">
-        <p-table [value]="itens" [responsive]="true" [paginator]="true" [rows]="5" 
-        [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10,15]"[(first)]="pagina" (onPage)="aoMudarPagina($event)"
+        <p-table [value]="itens" [responsive]="true" [paginator]="true" [rows]="4" 
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[4,8,12]"[(first)]="pagina" (onPage)="aoMudarPagina($event)"
           [totalRecords]="totalRegistros" #tabela>
           <ng-template pTemplate="header">
             <tr>
               <th>Item</th>
               <th>Quantidade</th>
-              <th>Saldo</th>
+              <th>Valor Unitario</th>
+              <th>Valor Total</th>
             </tr>
           </ng-template>
   
@@ -56,10 +59,14 @@
               <td>
                 <span class="p-column-title">Quantidade</span>
                 {{ itens.quantidade }}
+              </td> 
+              <td>
+                <span class="p-column-title">Valor Unitario</span>
+                {{ itens.valorUnitario | currency: 'BRL' }}
               </td>
               <td>
-                <span class="p-column-title">Quantidade</span>
-                {{ itens.saldo | currency: 'BRL' }}
+                <span class="p-column-title">Total</span>
+                {{ itens.total | currency: 'BRL' }}
               </td>
            <!--    <td>
                 <span class="p-column-title">Status</span>

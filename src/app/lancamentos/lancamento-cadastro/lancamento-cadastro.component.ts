@@ -26,6 +26,7 @@ export class LancamentoCadastroComponent implements OnInit {
   centrocusto: any[] = [];
   classificacao: any[] = [];
   pessoas: any[] = []
+  valoresUnitarios:any = []
   value:any = 'ENTRADA'
   unidades = ['Unidade','Litro','Caixa', 'Kilo', 'Metro', 'Balde'];
   view = false;
@@ -71,41 +72,48 @@ export class LancamentoCadastroComponent implements OnInit {
        this.view = true
   
     }}
+    atualizar(){
+ this.lancamentoService.getUnitarios(this.movimentacao.item).then(dados => {
+         this.valoresUnitarios = dados
+      }) 
+    }
   salvaLancamento(form:NgForm){
 
     this.movimentacao.tipo = this.value
-    console.log(this.movimentacao)
+
 
     if(this.view){
-      this.lancamentoService.put(this.movimentacao).then(dados => {
-        console.log(dados)
+   this.lancamentoService.putEdicao(this.movimentacao).then(dados => {
+    this.messageService.add({ severity: 'success', detail: 'Estoque alterado com sucesso!' })
+   }).then( () => {this.lancamentoService.put(this.movimentacao).then(dados => {
         this.messageService.add({ severity: 'success', detail: 'Movimentação alterada com sucesso!' })
       }
       ).catch(erro => {
         this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
       
-      }); 
+      })}).catch(erro => {
+        this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
+      
+      }) 
     }else{
     
      if(this.value == "ENTRADA" || this.value == 'SAIDA'){
-
         this.lancamentoService.post(this.movimentacao).then(dados => {
-      console.log(dados)
      this.messageService.add({ severity: 'success', detail: 'Movimentação salva com sucesso!' });
      form.reset()
     }) .catch(erro => {
       this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+erro.statusText });
     
     }); 
+
     
      
   this.lancamentoService.putEstoque(this.movimentacao).then(dados => {
-    console.log(dados)
     this.messageService.add({ severity: 'success', detail: 'Estoque alterado com sucesso!' });
   }).catch(error => {
     this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
   }) 
-      if(this.value == "ENTRADA" ){
+   /*    if(this.value == "ENTRADA" ){
     this.lancamentoService.postSaldo(this.movimentacao).then(dados => {
       console.log(dados)
       this.messageService.add({ severity: 'success', detail: 'Saldo salvo com sucesso!' });
@@ -118,7 +126,7 @@ export class LancamentoCadastroComponent implements OnInit {
       ).catch(error => {
         this.messageService.add({ severity: 'error', detail: 'Erro! Status: '+error.statusText });
       }) 
-    }
+    } */
     
   }
     else{
@@ -133,8 +141,7 @@ export class LancamentoCadastroComponent implements OnInit {
         this.movimentacao = movimentacao
       movimentacao.data?  this.movimentacao.data = new Date(movimentacao.data).toLocaleDateString('pt-BR'): null
         this.value = movimentacao.tipo 
-       
-        console.log(this.movimentacao)
+        this.movimentacao.valorUnitario = this.movimentacao.valorUnitario!.replace('.',',')
       },
         erro => this.errorHandler.handle(erro)); 
   }

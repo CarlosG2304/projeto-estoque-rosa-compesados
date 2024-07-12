@@ -9,6 +9,7 @@ var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 var PdfPrinter = require('pdfmake');
 var fs = require('fs');
+const { error } = require('console');
 app.use(bodyParser.json())
 
 var corsOptions = {
@@ -158,7 +159,7 @@ app.get('/movimentacao/:id', (req,res) => {
   .join('Itens', 'm.codigoItem', 'Itens.Id')
   .fullOuterJoin('classificacao as c',  'm.codigoClassificacao', 'c.Id')
   .fullOuterJoin('CentroCusto as cc', 'm.codigoCentroCusto', 'cc.Id')
-  .select('m.Id', 'Quantidade', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome', 'observacao')
+  .select('m.Id', 'Quantidade','m.valorUnitario', 'tipo', 'unidade', 'data',  'Itens.Id as ItemId', 'Itens.nome as nomeItem', 'c.Id as cId', 'c.nome as nomeClassificacao', 'cc.Id as CCId', 'cc.nome as CCNome', 'observacao')
   .where('m.Id', req.params.id)
   
   select.then(data => {
@@ -179,8 +180,9 @@ app.get('/movimentacao/:id', (req,res) => {
      "classificacao": {
         "Id":  data[0].cId,
         "nome":data[0].nomeClassificacao},
+        "valorUnitario":data[0].valorUnitario,
     "observacao":data[0].observacao
-    } 
+    }
 
        res.send(movimentacacao)
        
@@ -196,28 +198,35 @@ app.post('/movimentacao', (req,res) => {
     "unidade": req.body.unidade,
     "data": req.body.data,
     "codigoItem": req.body.item.Id,
+    "valorUnitario": parseFloat(req.body.valorUnitario.replace(',','.')),
     "codigoCentroCusto":  req.body.centrocusto.Id,
     "codigoClassificacao": req.body.classificacao.Id,
     "observacao":req.body.observacao
   }
+ 
   }else{
     movimentacacao = {
       "Quantidade": req.body.Quantidade,
       "tipo":  req.body.tipo,
-      "unidade": req.body.unidade.label,
+      "unidade": req.body.unidade,
       "data": req.body.data,
-      "codigoItem": req.body.item.Id}
+      "codigoItem": req.body.item.Id,
+      "valorUnitario": parseFloat(req.body.valorUnitario.replace(',','.')),
+    }
+  
   }
 
-
-
-
-  const insert =  knex.raw(`INSERT INTO public."Movimentação"("Quantidade", tipo, unidade, data, "CodigoSaldo",  "codigoItem") VALUES (?,?, ?, ?,nextval('"CodigoSaldo_seq"'::regclass), ?)`, [req.body.Quantidade,req.body.tipo, req.body.unidade,req.body.data,req.body.item.Id])
-
+  const insert =  knex('Movimentação').insert(movimentacacao)
+  
+  
   insert.then(data => {
-       res.send(data)
-  })
-  .catch(error => res.status(500).send(error))
+    res.send(data)
+})
+.catch(error =>{res.status(500).send(error)
+  console.log(error)}
+)
+
+  
    
  
 })
@@ -230,21 +239,25 @@ app.put('/movimentacao', (req,res) => {
       "unidade": req.body.unidade,
       "data": req.body.data,
       "codigoItem": req.body.item.Id,
+      "Quantidade": req.body.Quantidade,
+      "valorUnitario": parseFloat(req.body.valorUnitario.replace(',','.')),
       "codigoCentroCusto":  req.body.centrocusto.Id,
       "codigoClassificacao": req.body.classificacao.Id,
-      "observacao":req.body.observacao}
+      "observacao":req.body.observacao
+      
+    }
     }else{
       movimentacacao = {
         "Quantidade": req.body.Quantidade,
         "tipo":  req.body.tipo,
         "unidade": req.body.unidade,
         "data": req.body.data,
-        "codigoItem": req.body.item.Id}
+        "codigoItem": req.body.item.Id,
+        "valorUnitario": parseFloat(req.body.valorUnitario.replace(',','.'))
+      }
     }
   
-  
-  
-  
+
     const update = knex('Movimentação')
     .update(movimentacacao)
     .where('Id', req.body.Id)
@@ -263,24 +276,25 @@ app.put('/movimentacao', (req,res) => {
 app.get('/saldo', (req,res) => {
   
   if(req.query.tipo == 'SAIDA'){
-  const select = knex('Saldo as s')
-  .select('E.Id', 'E.nome',knex.raw('SUM("m"."Quantidade" - "s"."quantidade") as Quantidade'), knex.raw('SUM(("m"."Quantidade" - "s"."quantidade") * "s"."Valor_unitario") as Saldo'))
-  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
-  .leftJoin('Movimentação as m', 'm.CodigoSaldo', 's.codigoMovimentacao' )
-  .whereILike('E.nome', '%'+req.query.filtro+'%') 
-  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim])
-  .groupBy('E.Id')
+    const select = knex('Movimentação as m').avg('valorUnitario as valorUnitario').sum('Quantidade as quantidade').select('I.nome', knex.raw('SUM("valorUnitario" * "Quantidade") as Total'))
+    .leftJoin('Itens as I', 'm.codigoItem', 'I.Id')
+    .where('tipo','SAIDA')
+    .whereNotNull('valorUnitario')
+    .whereNot('valorUnitario',0)
+    .whereBetween('m.data', [req.query.dataInicio,req.query.dataFim])
+    .whereILike('I.nome', '%'+req.query.filtro+'%') 
+    .groupBy('I.nome')
   select.then(data => {
        res.send(data)
   })  
 } else if(req.query.tipo == 'ENTRADA'){
-  const select = knex('Saldo as s')
-  .select('E.Id', 'E.nome',knex.raw('SUM( "s"."quantidade") AS Quantidade'), knex.raw('SUM( "s"."quantidade" * "s"."Valor_unitario") as Saldo'))
-  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
-  .leftJoin('Movimentação as m', 'm.Id', 's.codigoMovimentacao' )
-  .whereILike('E.nome', '%'+req.query.filtro+'%') 
-  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim])
-  .groupBy('E.Id')
+  const select = knex('Movimentação as m').avg('valorUnitario as valorUnitario').sum('Quantidade as quantidade').select('I.nome', knex.raw('SUM("valorUnitario" * "Quantidade") as Total'))
+  .leftJoin('Itens as I', 'm.codigoItem', 'I.Id')
+  .where('tipo','ENTRADA')
+  .whereNotNull('valorUnitario')
+  .whereBetween('m.data', [req.query.dataInicio,req.query.dataFim])
+  .whereILike('I.nome', '%'+req.query.filtro+'%') 
+  .groupBy('I.nome')
   select.then(data => {
        res.send(data)
   })
@@ -289,18 +303,76 @@ app.get('/saldo', (req,res) => {
 })
 app.get('/saldo/relatorio', async(req,res) => {
   
+  ano =  [{
+    "nome": 'Janeiro',
+    "data_inicio": "2024-01-01",
+    "data_fim": "2024-01-31"
+    },{
+    "nome": 'Fevereiro',
+    "data_inicio": "2024-02-01",
+    "data_fim": "2024-02-29"
+    },{
+        "nome": 'Março',
+        "data_inicio": "2024-03-01",
+        "data_fim": "2024-03-31"
+        },{
+    "nome": 'Abril',
+    "data_inicio": "2024-04-01",
+    "data_fim": "2024-04-30"
+    },{
+       "nome": 'Maio',
+    "data_inicio": "2024-05-01",
+    "data_fim": "2024-05-31"
+     },{
+        "nome": 'Junho',
+    "data_inicio": "2024-06-01",
+    "data_fim": "2024-06-30"
+     },{
+        "nome": 'Julho',
+    "data_inicio": "2024-07-01",
+    "data_fim": "2024-07-31"
+     },{
+        "nome": 'Agosto',
+    "data_inicio": "2024-08-01",
+    "data_fim": "2024-08-31"
+     }, {
+        "nome": 'Setembro',
+    "data_inicio": "2024-09-01",
+    "data_fim": "2024-09-30"
+     },{
+        "nome": 'Outubro',
+    "data_inicio": "2024-10-01",
+    "data_fim": "2024-10-31"
+     }, {
+        "nome": 'Novembro',
+    "data_inicio": "2024-11-01",
+    "data_fim": "2024-11-30"
+     }, {
+        "nome": 'Dezembro',
+    "data_inicio": "2024-12-01",
+    "data_fim": "2024-12-31"
+     }]
 
-  const select =  await knex('Saldo as s')
-  .select('E.nome','s.data',knex.raw('SUM("m"."Quantidade" - "s"."quantidade") as Quantidade'), knex.raw('SUM(("m"."Quantidade" - "s"."quantidade") * "s"."Valor_unitario") as Valor_Total'),  knex.raw('avg("s"."Valor_unitario" ) As Valor_Unitario '))
-  .leftJoin('Estoque as E', 's.codigoItem','E.Id')
-  .leftJoin('Movimentação as m', 'm.CodigoSaldo', 's.codigoMovimentacao' )
-  /*  .whereBetween('s.data', [req.query.dataInicio,req.query.dataFim]) */
-  .whereRaw('"m"."Quantidade" - "s"."quantidade" != 0', )
-  .groupBy('E.Id')
-  .groupBy('s.data')
-  .orderBy('s.data')
-  .orderBy('E.nome')
-  
+     relatorioAno = []
+    
+     for(let mes of ano){
+  const select = await knex('Movimentação as m').avg('valorUnitario as valorUnitario').sum('Quantidade as quantidade').select('I.nome', knex.raw('SUM("valorUnitario" * "Quantidade") as Total'))
+    .leftJoin('Itens as I', 'm.codigoItem', 'I.Id')
+    .where('tipo','SAIDA')
+    .whereBetween('m.data',[mes.data_inicio,mes.data_fim])
+    .whereNotNull('valorUnitario')
+    .groupBy('I.nome')
+    for(let dias of select){
+      item = {
+        valorUnitario: dias.valorUnitario,
+        quantidade: dias.quantidade,
+        nome: dias.nome,
+        total: dias.total,
+        mes: mes.nome
+      }
+    relatorioAno.push(item)
+  }
+  }
   
  
   var fonts = {
@@ -332,14 +404,14 @@ app.get('/saldo/relatorio', async(req,res) => {
 
 
    body = []
-   for(let movimentacacao of select){
+   for(let movimentacacao of relatorioAno){
      rows = []
-     rows.push((movimentacacao.data.getMonth() + 1) + "/" + movimentacacao.data.getFullYear() )
-     rows.push(movimentacacao.nome)
-     rows.push('R$'+parseFloat(movimentacacao.valor_unitario).toFixed(2).toString().replace(".", ","))
+      rows.push(movimentacacao.mes )
+      rows.push(movimentacacao.nome)
+     rows.push('R$'+parseFloat(movimentacacao.valorUnitario).toFixed(2).toString().replace(".", ","))
      rows.push(movimentacacao.quantidade)
-     rows.push(movimentacacao.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
-    
+     rows.push(movimentacacao.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })) 
+ 
      body.push(rows) 
    
    }
@@ -566,7 +638,7 @@ pdfDoc.end();
 
 app.put('/estoque',(req,res) => {
 
-   
+    
        if(req.body.tipo == 'ENTRADA'){
    const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
         update.then(data => res.send(data))
@@ -574,21 +646,40 @@ app.put('/estoque',(req,res) => {
   }else if(req.body.tipo == 'SAIDA' ){
         const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [req.body.Quantidade,req.body.item.Id])
        update.then(data => res.send(data))
-       .catch(error => res.status(500).send(error))
-      }  
+       .catch(error => res.status(500).send(error)) 
+  } 
+    
  })
 
-app.get('/itens', (req,res) => {
-  const select = knex('Itens')
-  .select('*')
-  .whereILike('nome','%'+req.query.filtro+'%' )
-  .orderBy("nome")
-  select.then(data => {
-       res.send(data)
-  })
+ app.put('/estoque/edicao',(req,res) => {
 
-})
-app.post('/estoque', (req,res) => {
+  
+  const select = knex('Movimentação as m')
+  .select('Quantidade')
+  .where('Id', req.body.Id)
+
+       select.then(data => {
+     if(req.body.Quantidade){
+  
+       if(req.body.tipo == 'ENTRADA'){
+        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" - ? WHERE "Id" = ?', [ data[0].Quantidade - req.body.Quantidade ,req.body.item.Id])
+             update.then(data => res.send(data))
+             .catch(error => res.status(500).send(error))
+       }else if(req.body.tipo == 'SAIDA' ){
+        const update = knex.raw('UPDATE  "Estoque" SET  "Quantidade"= "Quantidade" + ? WHERE "Id" = ?', [ data[0].Quantidade - req.body.Quantidade ,req.body.item.Id])
+        update.then(data => res.send(data))
+        .catch(error => res.status(500).send(error))
+       } 
+    
+     }else{
+       res.status(400).send('Faltado a quantidade')
+      
+     }
+ })
+
+     } 
+)
+ app.post('/estoque', (req,res) => {
   novoEstoque = {
      "nome": req.body.nome,
      "Quantidade": 0}
@@ -604,6 +695,17 @@ app.post('/estoque', (req,res) => {
    })
  
  })
+
+app.get('/itens', (req,res) => {
+  const select = knex('Itens')
+  .select('*')
+  .whereILike('nome','%'+req.query.filtro+'%' )
+  .orderBy("nome")
+  select.then(data => {
+       res.send(data)
+  })
+
+})
 
 app.post('/itens', (req,res) => {
 
@@ -656,6 +758,22 @@ app.post('/classificacao', (req,res) => {
        res.send(data)
   })
 
+})
+
+app.get('/valoresUnitarios', (req,res) => {
+
+  if(req.query.codigoItem !== undefined){
+  const select = knex('Movimentação').select('valorUnitario')
+  .where('codigoItem', req.query.codigoItem)
+  .where('tipo','ENTRADA')
+  .orderBy('data','desc')
+  select.then(dados => {
+    res.send(dados)
+    
+  })
+  }else{
+    res.status(400).send('Codigo Undefined')
+  }
 })
 
 

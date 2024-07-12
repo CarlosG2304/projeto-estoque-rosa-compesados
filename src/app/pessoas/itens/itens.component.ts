@@ -35,7 +35,7 @@ pesquisar(){
 
 }
 relatorio(){
-  window.open("http://localhost:3001/estoque/relatorio")
+  window.open("http:"+window.location.href.toString().split(':')[1]+":3001/estoque/relatorio")
 }
 
 aoMudarPagina(event: LazyLoadEvent) {

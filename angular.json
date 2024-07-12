@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-primeng-todo": {
+    "estoque-projeto": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-primeng-todo",
+            "outputPath": "dist/estoque-projeto",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -88,10 +88,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-primeng-todo:build:production"
+              "browserTarget": "estoque-projeto:build:production"
             },
             "development": {
-              "browserTarget": "angular-primeng-todo:build:development"
+              "browserTarget": "estoque-projeto:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -99,7 +99,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-primeng-todo:build"
+            "browserTarget": "estoque-projeto:build"
           }
         },
         "test": {

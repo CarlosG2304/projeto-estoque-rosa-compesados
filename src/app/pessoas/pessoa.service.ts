@@ -12,7 +12,7 @@ export class PessoaFiltro {
   providedIn: 'root'
 })
 export class PessoaService {
-  classificacaoUrl = 'http://localhost:3001/classificacao';
+  classificacaoUrl = 'http:'+window.location.href.toString().split(':')[1]+':3001/classificacao';
 
   constructor(private http: HttpClient) { }
 /* 
