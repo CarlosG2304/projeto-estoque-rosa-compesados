@@ -46,6 +46,7 @@ export class LancamentosPesquisaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.filtro)
     this.title.setTitle('Movimentações');
    this.lancamentoService.getAll(this.filtro).then(dados => {
     this.movimentacao = dados
@@ -63,11 +64,12 @@ export class LancamentosPesquisaComponent implements OnInit {
   pesquisar(): void {
     this.pagina = 0
     if(typeof this.filtro.dataInicio === 'object'){
-      this.filtro.dataInicio =  this.datePipe.transform(this.filtro.dataInicio, 'dd/MM/yyyy')?.toString()
+      this.filtro.dataInicio =  this.datePipe.transform(this.filtro.dataInicio, 'yyyy/MM/dd')?.toString()
     }
       if(typeof this.filtro.dataFim === 'object'){
-      this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'dd/MM/yyyy')?.toString()
+      this.filtro.dataFim =  this.datePipe.transform(this.filtro.dataFim, 'yyyy/MM/dd')?.toString()
       }
+     console.log(this.filtro.dataInicio) 
     this.lancamentoService.getAll(this.filtro)
       .then((resultado: any) => {
         this.movimentacao = resultado;

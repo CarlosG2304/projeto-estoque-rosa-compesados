@@ -5,9 +5,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 const date = new Date();
 const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-const firstDayDate = firstDay.toLocaleDateString()
+const firstDayDate = `${date.getFullYear()}/${date.getMonth() + 1}/01`
 const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-const lastDayDate = lastDay.toLocaleDateString()
+const lastDayDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 
 export class LancamentoFiltro {
   descricao?: string = ''
@@ -34,6 +34,12 @@ export class LancamentoService {
 
     
 getAll(filtro:any):Promise<any>{
+  if(typeof filtro.dataInicio === 'object'){
+    filtro.dataInicio =  this.datePipe.transform(filtro.dataInicio, 'yyyy/MM/dd')?.toString()
+  }
+    if(typeof filtro.dataFim === 'object'){
+    filtro.dataFim =  this.datePipe.transform(filtro.dataFim, 'yyyy/MM/dd')?.toString()
+    }
   this.params = this.params.set('filtro', filtro.descricao)
   this.params = this.params.set('dataInicio', filtro.dataInicio)
   this.params = this.params.set('dataFim', filtro.dataFim) 

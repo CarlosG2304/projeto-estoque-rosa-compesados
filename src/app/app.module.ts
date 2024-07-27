@@ -13,10 +13,12 @@ import { PessoasModule } from './pessoas/pessoas.module';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppRoutingModule } from './app-routing.module';
 import { SaldoComponent } from './saldo/saldo.component';
+import { PizzaComponent } from './pizza/pizza.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    PizzaComponent,
  
   ],
   imports: [
