@@ -82,7 +82,11 @@ export class LancamentosPesquisaComponent implements OnInit {
   }
 
   relatorio(){
-    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/movimentacao/relatorio")
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/movimentacao/relatorio?dataInicio="+this.filtro.dataInicio+'&dataFim='+this.filtro.dataFim)
+  }
+
+  relatorioResumo(){
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/movimentacao/relatorio/resumo?dataInicio="+this.filtro.dataInicio+'&dataFim='+this.filtro.dataFim)
   }
 
   aoMudarPagina(event: LazyLoadEvent) {

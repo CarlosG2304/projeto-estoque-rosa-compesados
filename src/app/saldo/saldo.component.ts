@@ -71,7 +71,11 @@ export class SaldoComponent {
     
   }
   relatorio(){
-    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/saldo/relatorio")
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/saldo/relatorio?dataInicio="+this.filtro.dataInicio+'&dataFim='+this.filtro.dataFim)
+  } 
+
+  relatorioInsumos(){
+    window.open("http:"+window.location.href.toString().split(':')[1]+":3001/saldo/relatorio/insumos?dataInicio="+this.filtro.dataInicio+'&dataFim='+this.filtro.dataFim)
   } 
   
     aoMudarPagina(event: LazyLoadEvent) {

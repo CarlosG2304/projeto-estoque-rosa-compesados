@@ -26,8 +26,11 @@
       <div class="sm:col-4 lg:col-4">
         <button pButton icon="pi pi-search" class="p-button-info" (click)="pesquisar()" type="submit" label="Pesquisar"></button>
       </div>
-      <div class="lg:col-6 sm:col-4">
-      <button pButton  pRipple label="Relatorio" (click)="relatorio()" class="p-button-success" ></button>
+      <div class="lg:col-3 sm:col-4">
+      <button pButton  pRipple label="Relatorio Completo" (click)="relatorio()" class="p-button-success" ></button>
+    </div>
+    <div class="lg:col-3 sm:col-4">
+      <button pButton  pRipple label="Relatorio Resumo" (click)="relatorioResumo()" class="p-button-success" ></button>
     </div>
     <div class="lg:col-2 lg:p-fluid">
   <a pButton  class="p-button-warning" label="Novo Lançamento" routerLink="/lancamento/novo"></a>
